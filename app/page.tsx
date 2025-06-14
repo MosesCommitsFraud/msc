@@ -1,103 +1,166 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-[#1a1a1a] text-[#e5e5e5]" style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+      {/* Top fade overlay */}
+      <div className="fixed left-0 right-0 h-14 bg-gradient-to-b from-[#1a1a1a] via-[#1a1a1a] via-[#1a1a1a] to-transparent z-10 pointer-events-none"></div>
+      
+      <div className="max-w-2xl mx-auto px-6 py-42">
+        {/* Header */}
+        <header className="mb-24">
+          <h1 className="text-lg font-medium mb-4 text-[#e5e5e5]">Moritz Schäfer</h1>
+          <p className="text-[#888] mb-6 text-base">
+            <em>I like to try new stuff</em>. Experimenting with new AI stuff and current tech trends. I like to build nice looking interfaces.
+            
+          </p>
+          <p className="text-[#888] text-base">
+            Currently employed at PHOENIX group as a dual study student.
+          </p>
+        </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        {/* Three Column Layout: Building, Projects, Writing */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
+          {/* Building Section */}
+          <section>
+            <h2 className="text-base font-medium mb-8 text-[#888]">Building</h2>
+            <div className="space-y-4">
+              <div>
+                <a href="#" className="block group">
+                  <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
+                    <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
+                      Craft
+                    </span>
+                    <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </h3>
+                  <p className="text-[#888] text-base">Implementing interfaces and interactions.</p>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* Projects Section */}
+          <section>
+            <h2 className="text-base font-medium mb-8 text-[#888]">Projects</h2>
+            <div className="space-y-6">
+              <div>
+                <a href="#" className="block group">
+                  <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
+                    <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
+                      ⌘K
+                    </span>
+                    <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </h3>
+                  <p className="text-[#888] text-base">Composable command menu React component.</p>
+                </a>
+              </div>
+              <div>
+                <a href="#" className="block group">
+                  <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
+                    <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
+                      Writer
+                    </span>
+                    <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </h3>
+                  <p className="text-[#888] text-base">Plain text editor with a focus on performance.</p>
+                </a>
+              </div>
+              <div>
+                <a href="#" className="block group">
+                  <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
+                    <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
+                      Next Themes
+                    </span>
+                    <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </h3>
+                  <p className="text-[#888] text-base">Perfect dark mode in Next.js apps.</p>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* Writing Section */}
+          <section>
+            <h2 className="text-base font-medium mb-8 text-[#888]">Writing</h2>
+            <div className="space-y-6">
+              <div>
+                <a href="#" className="block group">
+                  <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
+                    <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
+                      React Hook Getter Pattern
+                    </span>
+                    <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </h3>
+                  <p className="text-[#888] text-base">Simple, efficient React state hook in 50 lines.</p>
+                </a>
+              </div>
+              <div>
+                <a href="#" className="block group">
+                  <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
+                    <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
+                      Redesign 2021
+                    </span>
+                    <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </h3>
+                  <p className="text-[#888] text-base">Return to simplicity.</p>
+                </a>
+              </div>
+              <div>
+                <a href="#" className="block group">
+                  <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
+                    <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
+                      All writing
+                    </span>
+                    <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </h3>
+                  <p className="text-[#888] text-base">Infrequent thoughts on design and code.</p>
+                </a>
+              </div>
+            </div>
+          </section>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Now Section */}
+        <section className="mb-16">
+          <h2 className="text-lg font-medium mb-8 text-[#e5e5e5]">Now</h2>
+          <div className="space-y-4 text-[#e5e5e5] text-base leading-relaxed">
+            <p>
+              Developing skill through doing, guiltlessly exploring passion and interests, imbuing quality. 
+              Mindful that <em>everything around me is someone's life work.</em>
+            </p>
+            <p>
+              All I want to do is build websites. Typography, motion design, copywriting, performance—
+              the web is an endless medium of opportunity and creativity of which I've only scratched 
+              the surface.
+            </p>
+            <p>
+              Enjoying deep, dark, boring dance music: songs that set the pace in the first ten seconds 
+              and maintain it for the next ten minutes. Deep is a curation of my favorites. Soothed by the 
+              inherent energy of drum and bass—Drum has my favorites.
+            </p>
+          </div>
+        </section>
+
+        {/* Connect Section */}
+        <section>
+          <h2 className="text-lg font-medium mb-8 text-[#e5e5e5]">Connect</h2>
+          <p className="text-[#e5e5e5] text-base">
+            Reach me at <span className="text-[#e5e5e5]">@msc</span> or <span className="text-[#e5e5e5]">ms@msc.dev</span>.
+          </p>
+        </section>
+      </div>
     </div>
   );
 }
