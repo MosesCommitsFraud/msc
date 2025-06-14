@@ -5,11 +5,11 @@ export default function Home() {
     <>
       <style jsx global>{`
         ::selection {
-          background-color: #6b46c1;
+          background-color: rgba(107, 70, 193, 0.3);
           color: white;
         }
         ::-moz-selection {
-          background-color: #6b46c1;
+          background-color: rgba(107, 70, 193, 0.3);
           color: white;
         }
       `}</style>
