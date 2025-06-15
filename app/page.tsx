@@ -80,18 +80,29 @@ float pattern(vec2 p) {
   return fbm(p - fbm(p + fbm(p2)));
 }
 
+// Rounded rectangle distance function
+float roundedRectSDF(vec2 p, vec2 center, vec2 size, float radius) {
+  vec2 d = abs(p - center) - size + radius;
+  return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0) - radius;
+}
+
 void main() {
   vec2 uv = gl_FragCoord.xy / resolution.xy;
-  uv -= 0.5;
-  uv.x *= resolution.x / resolution.y;
-  float f = pattern(uv);
+  vec2 centeredUv = uv - 0.5;
+  centeredUv.x *= resolution.x / resolution.y;
+  
+  float f = pattern(centeredUv);
+  
   if (enableMouseInteraction == 1) {
     vec2 mouseNDC = (mousePos / resolution - 0.5) * vec2(1.0, -1.0);
     mouseNDC.x *= resolution.x / resolution.y;
-    float dist = length(uv - mouseNDC);
+    float dist = length(centeredUv - mouseNDC);
     float effect = 1.0 - smoothstep(0.0, mouseRadius, dist);
     f -= 0.5 * effect;
   }
+  
+
+  
   // Use #1a1a1a background color (26/255 ≈ 0.102) instead of pure black
   vec3 backgroundColor = vec3(0.102);
   vec3 col = mix(backgroundColor, waveColor, f);
@@ -444,6 +455,22 @@ export default function Home() {
               colorNum={8}
               pixelSize={1}
             />
+            {/* Signature overlay */}
+            <div className="absolute bottom-[-16] right-4 w-32 h-32 pointer-events-none">
+              <img 
+                src="/Signature.svg"
+                alt="Signature"
+                className="w-full h-full"
+                style={{
+                  filter: 'brightness(0) invert(1)',
+                  imageRendering: 'auto',
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale'
+                }}
+              />
+            </div>
           </div>
           {/* Background overlay that fades in as dither fades out */}
           {ditherFadingOut && (
