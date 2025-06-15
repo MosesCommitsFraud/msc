@@ -393,6 +393,15 @@ export default function Home() {
             opacity: 0;
           }
         }
+
+        @keyframes fadeToBackground {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
         
         .animate-fade-in-up {
           animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
@@ -405,6 +414,11 @@ export default function Home() {
 
         .animate-fade-out {
           animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        .animate-fade-to-background {
+          animation: fadeToBackground 0.5s ease-out forwards;
+          opacity: 0;
         }
         
         .delay-150 { animation-delay: 0.15s; }
@@ -419,17 +433,26 @@ export default function Home() {
 
       {/* Dither Background */}
       {showDither && (
-        <div 
-          className={`fixed inset-0 z-50 cursor-pointer ${!showDither ? 'animate-fade-out' : ''}`}
-          onMouseDown={handleClick}
-        >
-          <Dither 
-            enableMouseInteraction={false}
-            waveColor={[0.3, 0.3, 0.3]}
-            colorNum={8}
-            pixelSize={1}
-          />
-        </div>
+        <>
+          <div 
+            className={`fixed inset-0 z-50 cursor-pointer ${ditherFadingOut ? 'animate-fade-out' : ''}`}
+            onMouseDown={handleClick}
+          >
+            <Dither 
+              enableMouseInteraction={false}
+              waveColor={[0.3, 0.3, 0.3]}
+              colorNum={8}
+              pixelSize={1}
+            />
+          </div>
+          {/* Background overlay that fades in as dither fades out */}
+          {ditherFadingOut && (
+            <div 
+              className="fixed inset-0 z-40 bg-[#1a1a1a] animate-fade-to-background"
+              style={{ opacity: 0 }}
+            />
+          )}
+        </>
       )}
 
       {/* Main Content */}
