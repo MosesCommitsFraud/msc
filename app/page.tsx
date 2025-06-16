@@ -457,11 +457,27 @@ export default function Home() {
               colorNum={8}
               pixelSize={1}
             />
+            {/* Logo */}
+            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 -translate-y-36">
+              <img 
+                src="/logo.svg"
+                alt="Logo"
+                className="w-52 h-52 mx-auto"
+                style={{
+                  filter: 'brightness(0) invert(1)',
+                  imageRendering: 'auto',
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale'
+                }}
+              />
+            </div>
             {/* Enter Button */}
             <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 translate-y-16">
               <button
                 onClick={handleClick}
-                className="px-12 py-3 bg-[#f5f5dc] border border-[#e8e8d0] rounded-lg text-[#2a2a2a] text-sm font-medium hover:bg-[#ebe7c8] hover:border-[#d4d0b0] hover:text-[#1a1a1a] hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0.5 active:scale-100 active:shadow-sm transition-all duration-150 ease-out shadow-lg transform"
+                className="px-12 py-3 bg-white border border-[#e8e8d0] rounded-lg text-[#2a2a2a] text-sm font-medium hover:bg-[#f0f0f0] hover:border-[#d4d0b0] hover:text-[#1a1a1a] hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0.5 active:scale-100 active:shadow-sm transition-all duration-150 ease-out shadow-lg transform"
                 style={{
                   fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                 }}

@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Moritz Schäfer",
   description: "Portfolio Page of Moritz Schäfer",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
