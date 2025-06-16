@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Moritz Schäfer",
   description: "Portfolio Page of Moritz Schäfer",
   icons: {
-    icon: "/logo.svg",
+    icon: "/logo-white.svg",
   },
 };
 
@@ -27,6 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/logo-white.svg" type="image/svg+xml" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
