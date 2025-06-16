@@ -106,7 +106,10 @@ void main() {
   // Use #1a1a1a background color (26/255 ≈ 0.102) instead of pure black
   vec3 backgroundColor = vec3(0.102);
   vec3 col = mix(backgroundColor, waveColor, f);
-  gl_FragColor = vec4(col, 1.0);
+  
+  // Force grayscale output to prevent color profile artifacts
+  float gray = dot(col, vec3(0.299, 0.587, 0.114)); // Standard luminance calculation
+  gl_FragColor = vec4(vec3(gray), 1.0);
 }
 `;
 
