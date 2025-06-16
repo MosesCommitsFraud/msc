@@ -353,8 +353,8 @@ export default function Home() {
   const [ditherFadingOut, setDitherFadingOut] = useState(false);
   const [showContent, setShowContent] = useState(false);
 
-  const handleClick = (e: React.MouseEvent) => {
-    if (e.button === 0 && showDither && !ditherFadingOut) { // Left click only
+  const handleClick = () => {
+    if (showDither && !ditherFadingOut) {
       setDitherFadingOut(true);
       // Hide the dither after animation completes
       setTimeout(() => {
@@ -446,8 +446,7 @@ export default function Home() {
       {showDither && (
         <>
           <div 
-            className={`fixed inset-0 z-50 cursor-pointer ${ditherFadingOut ? 'animate-fade-out' : ''}`}
-            onMouseDown={handleClick}
+            className={`fixed inset-0 z-50 ${ditherFadingOut ? 'animate-fade-out' : ''}`}
           >
             <Dither 
               enableMouseInteraction={false}
@@ -455,6 +454,18 @@ export default function Home() {
               colorNum={8}
               pixelSize={1}
             />
+            {/* Enter Button */}
+            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 translate-y-16">
+              <button
+                onClick={handleClick}
+                className="px-12 py-3 bg-[#f5f5dc] border border-[#e8e8d0] rounded-lg text-[#2a2a2a] text-sm font-medium hover:bg-[#ebe7c8] hover:border-[#d4d0b0] hover:text-[#1a1a1a] hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0.5 active:scale-100 active:shadow-sm transition-all duration-150 ease-out shadow-lg transform"
+                style={{
+                  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                }}
+              >
+                Enter
+              </button>
+            </div>
             {/* Signature overlay */}
             <div className="absolute bottom-[-16] right-4 w-32 h-32 pointer-events-none">
               <img 
