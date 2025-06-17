@@ -356,16 +356,19 @@ export default function Home() {
   const [ditherFadingOut, setDitherFadingOut] = useState(false);
   const [showContent, setShowContent] = useState(false);
 
-  const handleClick = () => {
-    if (showDither && !ditherFadingOut) {
+  useEffect(() => {
+    // Start fade out after 4 seconds
+    const timer = setTimeout(() => {
       setDitherFadingOut(true);
       // Hide the dither after animation completes
       setTimeout(() => {
         setShowDither(false);
         setShowContent(true);
-      }, 500);
-    }
-  };
+      }, 1000); // Increased from 500ms to 1000ms for slower fade
+    }, 4000); // Increased from 3000ms to 4000ms
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
@@ -427,11 +430,11 @@ export default function Home() {
         }
 
         .animate-fade-out {
-          animation: fadeOut 0.5s ease-out forwards;
+          animation: fadeOut 1s ease-out forwards; /* Increased from 0.5s to 1s */
         }
 
         .animate-fade-to-background {
-          animation: fadeToBackground 0.5s ease-out forwards;
+          animation: fadeToBackground 1s ease-out forwards; /* Increased from 0.5s to 1s */
           opacity: 0;
         }
         
@@ -458,7 +461,7 @@ export default function Home() {
               pixelSize={2}
             />
             {/* Logo */}
-            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 -translate-y-36">
+            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <img 
                 src="/logo.svg"
                 alt="Logo"
@@ -472,18 +475,6 @@ export default function Home() {
                   MozOsxFontSmoothing: 'grayscale'
                 }}
               />
-            </div>
-            {/* Enter Button */}
-            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 translate-y-16">
-              <button
-                onClick={handleClick}
-                className="px-12 py-3 bg-white border border-[#e8e8d0] rounded-lg text-[#2a2a2a] text-sm font-medium hover:bg-[#f0f0f0] hover:border-[#d4d0b0] hover:text-[#1a1a1a] hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0.5 active:scale-100 active:shadow-sm transition-all duration-150 ease-out shadow-lg transform"
-                style={{
-                  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-                }}
-              >
-                Enter
-              </button>
             </div>
             {/* Signature overlay */}
             <div className="absolute bottom-[-16] right-4 w-32 h-32 pointer-events-none">
