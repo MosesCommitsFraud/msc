@@ -455,7 +455,7 @@ export default function Home() {
               enableMouseInteraction={false}
               waveColor={[0.3, 0.3, 0.3]}
               colorNum={8}
-              pixelSize={1}
+              pixelSize={2}
             />
             {/* Logo */}
             <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 -translate-y-36">
