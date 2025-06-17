@@ -355,20 +355,93 @@ export default function Home() {
   const [showDither, setShowDither] = useState(true);
   const [ditherFadingOut, setDitherFadingOut] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  const [isReturningToDither, setIsReturningToDither] = useState(false);
+  const [contentFadingOut, setContentFadingOut] = useState(false);
 
+  // Function to handle the initial fade out
+  const handleInitialFadeOut = () => {
+    setDitherFadingOut(true);
+    setTimeout(() => {
+      setShowDither(false);
+      setShowContent(true);
+    }, 1000);
+  };
+
+  // Function to handle the return to dither view
+  const handleReturnToDither = () => {
+    setIsReturningToDither(true);
+    setContentFadingOut(true);
+    
+    // First fade out the content
+    setTimeout(() => {
+      setShowContent(false);
+      setContentFadingOut(false);
+      // Then fade in the dither
+      setDitherFadingOut(false);
+      setShowDither(true);
+      setIsReturningToDither(false);
+    }, 1000);
+  };
+
+  // Function to handle return to content
+  const handleReturnToContent = () => {
+    setDitherFadingOut(true);
+    setTimeout(() => {
+      setShowDither(false);
+      setShowContent(true);
+    }, 1000);
+  };
+
+  // Effect for initial fade out
   useEffect(() => {
-    // Start fade out after 4 seconds
-    const timer = setTimeout(() => {
-      setDitherFadingOut(true);
-      // Hide the dither after animation completes
-      setTimeout(() => {
-        setShowDither(false);
-        setShowContent(true);
-      }, 1000); // Increased from 500ms to 1000ms for slower fade
-    }, 4000); // Increased from 3000ms to 4000ms
+    const initialTimer = setTimeout(handleInitialFadeOut, 4000);
+    return () => clearTimeout(initialTimer);
+  }, []); // Empty dependency array for initial fade only
 
-    return () => clearTimeout(timer);
-  }, []);
+  // Separate effect for inactivity detection
+  useEffect(() => {
+    let inactivityTimer: NodeJS.Timeout;
+    let lastMouseMoveTime = Date.now();
+
+    // Function to reset the inactivity timer
+    const resetInactivityTimer = () => {
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+      
+      // If we're returning to dither, don't interrupt
+      if (isReturningToDither) return;
+
+      const currentTime = Date.now();
+      const timeSinceLastMove = currentTime - lastMouseMoveTime;
+      
+      // If mouse just started moving and we're showing dither
+      if (timeSinceLastMove > 100 && showDither && !ditherFadingOut) {
+        handleReturnToContent();
+      }
+      
+      lastMouseMoveTime = currentTime;
+      
+      if (showContent) {
+        inactivityTimer = setTimeout(handleReturnToDither, 60000); // 60 seconds
+      }
+    };
+
+    // Add event listeners for user activity
+    const events = ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'];
+    events.forEach(event => {
+      window.addEventListener(event, resetInactivityTimer, { passive: true });
+    });
+
+    // Initial setup of inactivity timer
+    resetInactivityTimer();
+
+    // Cleanup function
+    return () => {
+      clearTimeout(inactivityTimer);
+      events.forEach(event => {
+        window.removeEventListener(event, resetInactivityTimer);
+      });
+    };
+  }, [showContent, showDither, ditherFadingOut, isReturningToDither]);
 
   return (
     <>
@@ -430,11 +503,11 @@ export default function Home() {
         }
 
         .animate-fade-out {
-          animation: fadeOut 1s ease-out forwards; /* Increased from 0.5s to 1s */
+          animation: fadeOut 1s ease-out forwards;
         }
 
         .animate-fade-to-background {
-          animation: fadeToBackground 1s ease-out forwards; /* Increased from 0.5s to 1s */
+          animation: fadeToBackground 1s ease-out forwards;
           opacity: 0;
         }
         
@@ -505,7 +578,7 @@ export default function Home() {
 
       {/* Main Content */}
       {showContent && (
-        <div className="min-h-screen bg-[#1a1a1a] text-[#e5e5e5]" style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+        <div className={`min-h-screen bg-[#1a1a1a] text-[#e5e5e5] ${contentFadingOut ? 'animate-fade-out' : ''}`} style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
           {/* Top fade overlay */}
           <div className="fixed left-0 right-0 h-14 bg-gradient-to-b from-[#1a1a1a] via-[#1a1a1a] via-[#1a1a1a] to-transparent z-10 pointer-events-none"></div>
           
