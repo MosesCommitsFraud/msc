@@ -239,6 +239,14 @@ export default function Home() {
             {/* Header */}
             <header className="mb-24 animate-fade-in-up delay-150" style={{ opacity: 0, transform: 'translateY(30px)' }}>
               <h1 className="text-lg font-medium mb-4 text-[#e5e5e5]">Moritz Schäfer</h1>
+              <div className="flex items-center gap-2 mb-4 animate-fade-in delay-200" style={{ opacity: 0 }}>
+                {/* Location Icon */}
+                <svg className="w-4 h-4 text-[#888]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4.418 0-8-5.373-8-9.5A8 8 0 0 1 20 11.5C20 15.627 16.418 21 12 21z" />
+                  <circle cx="12" cy="11" r="3" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                </svg>
+                <span className="text-[#888] text-base">Mannheim, Germany</span>
+              </div>
               <p className="text-[#e5e5e5] mb-6 text-base">
                 <em>I like to try new stuff</em>. Experimenting with new AI stuff and current tech trends. I like to build nice looking interfaces.
               </p>
