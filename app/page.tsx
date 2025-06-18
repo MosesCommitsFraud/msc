@@ -239,11 +239,11 @@ export default function Home() {
             {/* Header */}
             <header className="mb-24 animate-fade-in-up delay-150" style={{ opacity: 0, transform: 'translateY(30px)' }}>
               <h1 className="text-lg font-medium mb-4 text-[#e5e5e5]">Moritz Schäfer</h1>
-              <p className="text-[#888] mb-6 text-base">
+              <p className="text-[#e5e5e5] mb-6 text-base">
                 <em>I like to try new stuff</em>. Experimenting with new AI stuff and current tech trends. I like to build nice looking interfaces.
               </p>
               <div className="animate-fade-in delay-250" style={{ opacity: 0 }}>
-                <p className="text-[#888] text-base">
+                <p className="text-[#e5e5e5] text-base">
                   Currently employed at PHOENIX group as a dual study student.
                 </p>
               </div>
