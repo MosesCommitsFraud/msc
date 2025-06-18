@@ -9,6 +9,7 @@ export default function Home() {
   const [showContent, setShowContent] = useState(false);
   const [isReturningToDither, setIsReturningToDither] = useState(false);
   const [contentFadingOut, setContentFadingOut] = useState(false);
+  const [hasShownContentOnce, setHasShownContentOnce] = useState(false);
 
   // Function to handle the initial fade out
   const handleInitialFadeOut = () => {
@@ -16,6 +17,7 @@ export default function Home() {
     setTimeout(() => {
       setShowDither(false);
       setShowContent(true);
+      setHasShownContentOnce(true);
     }, 1000);
   };
 
@@ -52,26 +54,23 @@ export default function Home() {
 
   // Separate effect for inactivity detection
   useEffect(() => {
+    if (!hasShownContentOnce) return; // Only set up inactivity detection after initial dither phase
+
     let inactivityTimer: NodeJS.Timeout;
     let lastMouseMoveTime = Date.now();
 
     // Function to reset the inactivity timer
     const resetInactivityTimer = () => {
       if (inactivityTimer) clearTimeout(inactivityTimer);
-      
       // If we're returning to dither, don't interrupt
       if (isReturningToDither) return;
-
       const currentTime = Date.now();
       const timeSinceLastMove = currentTime - lastMouseMoveTime;
-      
-      // If mouse just started moving and we're showing dither
-      if (timeSinceLastMove > 100 && showDither && !ditherFadingOut) {
+      // If mouse just started moving and we're showing dither (AFK mode), allow return to content
+      if (timeSinceLastMove > 100 && showDither && !ditherFadingOut && hasShownContentOnce) {
         handleReturnToContent();
       }
-      
       lastMouseMoveTime = currentTime;
-      
       if (showContent) {
         inactivityTimer = setTimeout(handleReturnToDither, 60000); // 60 seconds
       }
@@ -84,7 +83,9 @@ export default function Home() {
     });
 
     // Initial setup of inactivity timer
-    resetInactivityTimer();
+    if (showContent) {
+      inactivityTimer = setTimeout(handleReturnToDither, 60000); // 60 seconds
+    }
 
     // Cleanup function
     return () => {
@@ -93,7 +94,7 @@ export default function Home() {
         window.removeEventListener(event, resetInactivityTimer);
       });
     };
-  }, [showContent, showDither, ditherFadingOut, isReturningToDither]);
+  }, [showContent, showDither, ditherFadingOut, isReturningToDither, hasShownContentOnce]);
 
   return (
     <>
