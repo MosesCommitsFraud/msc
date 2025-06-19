@@ -34,6 +34,7 @@ export default function Home() {
       // Then fade in the dither
       setDitherFadingOut(false);
       setShowDither(true);
+      setDitherReady(true); // Make dither visible for AFK mode
       setIsReturningToDither(false);
     }, 1000);
   };
@@ -43,6 +44,7 @@ export default function Home() {
     setDitherFadingOut(true);
     setTimeout(() => {
       setShowDither(false);
+      setDitherReady(false); // Hide dither when returning to content
       setShowContent(true);
     }, 1000);
   };
