@@ -28,10 +28,7 @@ export default function SkillsPage() {
     { name: "Git", level: "Advanced", icon: GitIcon, color: "#f05032" },
   ]
 
-  const languages = [
-    { name: "German", level: "Native (C2)", icon: Languages, color: "#000000" },
-    { name: "English", level: "Fluent (C1)", icon: Languages, color: "#012169" },
-  ]
+
 
   const education = [
     {
@@ -74,40 +71,7 @@ export default function SkillsPage() {
     },
   ]
 
-  const projects = [
-    {
-      name: "Become Consulting",
-      role: "Developer",
-      location: "Mannheim",
-      period: "Sep. 2024 – Apr. 2025",
-      description:
-        "Conceptualized and led workshops for a local CBD shop, developed targeted business strategies, built webshop and online presence, implemented profile website for the flower shop",
-    },
-    {
-      name: "Evalo – Feedback Analysis Tool",
-      role: "Developer",
-      location: "Mannheim",
-      period: "Sep. 2024 – Mar 2025",
-      description:
-        "Developed scalable feedback and sentiment analysis tool with Next.js and Supabase, featuring comprehensive authentication and authorization mechanisms",
-    },
-    {
-      name: "Stundenstapel",
-      role: "Developer",
-      location: "Mannheim",
-      period: "Feb. 2024 – Mai 2024",
-      description:
-        "Designed and developed 'Stundenstapel' web application for school inventory and loan management with modular architecture, implemented comprehensive authentication with Angular and Firebase",
-    },
-    {
-      name: "Salamon (Yu-Gi-Oh! Deck Builder)",
-      role: "Developer",
-      location: "Mannheim",
-      period: "Sep. 2024 – Mai 2025",
-      description:
-        "Developed deck builder for Yu-Gi-Oh! card game with multiple self-trained ML models in Python, frontend built with Next.js, implemented Azure-hosted RAG with official rulebook and card information",
-    },
-  ]
+
 
   return (
     <div
@@ -133,83 +97,7 @@ export default function SkillsPage() {
           </p>
         </header>
 
-        {/* Technical Skills */}
-        <section className="mb-20">
-          <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
-            <Code className="w-5 h-5" />
-            Technical Skills
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-            {technicalSkills.map((skill) => {
-              const isHovered = hoveredSkill === skill.name
-              return (
-                <div
-                  key={skill.name}
-                  className="group p-4 rounded-lg border border-[#333] hover:border-[#555] transition-all duration-200 cursor-pointer"
-                  onMouseEnter={() => setHoveredSkill(skill.name)}
-                  onMouseLeave={() => setHoveredSkill(null)}
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-5 h-5 transition-all duration-200">
-                      <img
-                        src={skill.icon}
-                        alt={skill.name}
-                        className="w-full h-full transition-all duration-200"
-                        style={{
-                          filter: isHovered ? "none" : "grayscale(100%) brightness(0.7) opacity(0.6)",
-                        }}
-                      />
-                    </div>
-                    <span className="text-[#e5e5e5] font-medium text-sm">{skill.name}</span>
-                  </div>
-                  <span className="text-[#888] text-xs">{skill.level}</span>
-                </div>
-              )
-            })}
-          </div>
-        </section>
-
-
-        {/* Education Timeline */}
-        <section className="mb-20">
-          <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
-            <GraduationCap className="w-5 h-5" />
-            Education
-          </h2>
-          <div className="space-y-10">
-            {education.map((edu, index) => (
-              <div key={index} className="relative pl-8">
-                {/* Timeline line */}
-                {index !== education.length - 1 && <div className="absolute left-2 top-8 w-px h-16 bg-[#333]"></div>}
-                {/* Timeline dot */}
-                <div
-                  className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 ${
-                    edu.current ? "bg-[#6b46c1] border-[#6b46c1]" : "bg-[#1a1a1a] border-[#555]"
-                  }`}
-                ></div>
-
-                <div className="space-y-2">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                    <h3 className="text-[#e5e5e5] font-medium">{edu.institution}</h3>
-                    <div className="flex items-center gap-4 text-[#888] text-sm">
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        <span>{edu.location}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        <span>{edu.period}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-[#888] text-sm">{edu.degree}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Experience Timeline */}
+        {/* Professional Experience Timeline */}
         <section className="mb-20">
           <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
             <Briefcase className="w-5 h-5" />
@@ -256,34 +144,80 @@ export default function SkillsPage() {
           </div>
         </section>
 
-        {/* Projects */}
+        {/* Education Timeline */}
+        <section className="mb-20">
+          <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
+            <GraduationCap className="w-5 h-5" />
+            Education
+          </h2>
+          <div className="space-y-10">
+            {education.map((edu, index) => (
+              <div key={index} className="relative pl-8">
+                {/* Timeline line */}
+                {index !== education.length - 1 && <div className="absolute left-2 top-8 w-px h-16 bg-[#333]"></div>}
+                {/* Timeline dot */}
+                <div
+                  className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 ${
+                    edu.current ? "bg-[#6b46c1] border-[#6b46c1]" : "bg-[#1a1a1a] border-[#555]"
+                  }`}
+                ></div>
+
+                <div className="space-y-2">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                    <h3 className="text-[#e5e5e5] font-medium">{edu.institution}</h3>
+                    <div className="flex items-center gap-4 text-[#888] text-sm">
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3" />
+                        <span>{edu.location}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        <span>{edu.period}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-[#888] text-sm">{edu.degree}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+
+
+        {/* Technical Skills */}
         <section>
           <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
             <Code className="w-5 h-5" />
-            Key Projects
+            Technical Skills
           </h2>
-          <div className="grid gap-8">
-            {projects.map((project, index) => (
-              <div key={index} className="p-6 rounded-lg border border-[#333] hover:border-[#555] transition-colors">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
-                  <div>
-                    <h3 className="text-[#e5e5e5] font-medium">{project.name}</h3>
-                    <p className="text-[#888] text-sm">{project.role}</p>
-                  </div>
-                  <div className="flex items-center gap-4 text-[#888] text-sm">
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
-                      <span>{project.location}</span>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            {technicalSkills.map((skill) => {
+              const isHovered = hoveredSkill === skill.name
+              return (
+                <div
+                  key={skill.name}
+                  className="group p-4 rounded-lg border border-[#333] hover:border-[#555] transition-all duration-200 cursor-pointer"
+                  onMouseEnter={() => setHoveredSkill(skill.name)}
+                  onMouseLeave={() => setHoveredSkill(null)}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-5 h-5 transition-all duration-200">
+                      <img
+                        src={skill.icon}
+                        alt={skill.name}
+                        className="w-full h-full transition-all duration-200"
+                        style={{
+                          filter: isHovered ? "none" : "grayscale(100%) brightness(0.7) opacity(0.6)",
+                        }}
+                      />
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      <span>{project.period}</span>
-                    </div>
+                    <span className="text-[#e5e5e5] font-medium text-sm">{skill.name}</span>
                   </div>
+                  <span className="text-[#888] text-xs">{skill.level}</span>
                 </div>
-                <p className="text-[#888] text-sm leading-relaxed">{project.description}</p>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </section>
       </div>
