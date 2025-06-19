@@ -45,7 +45,7 @@ export default function SkillsPage() {
       role: "Wirtschaftsinformatik, Sales & Consulting",
       location: "Mannheim",
       startDate: "2022-10-01",
-      endDate: "2025-09-30",
+      endDate: null,
       highlights: ["Dual Study Program"],
       status: "active",
     },
