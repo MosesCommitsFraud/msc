@@ -5,6 +5,7 @@ import { Dither } from "./components/Dither";
 
 export default function Home() {
   const [showDither, setShowDither] = useState(true);
+  const [ditherReady, setDitherReady] = useState(false);
   const [ditherFadingOut, setDitherFadingOut] = useState(false);
   const [showContent, setShowContent] = useState(false);
   const [isReturningToDither, setIsReturningToDither] = useState(false);
@@ -46,11 +47,27 @@ export default function Home() {
     }, 1000);
   };
 
-  // Effect for initial fade out
+  // Effect to handle initial behavior based on sessionStorage
   useEffect(() => {
-    const initialTimer = setTimeout(handleInitialFadeOut, 4000);
-    return () => clearTimeout(initialTimer);
-  }, []); // Empty dependency array for initial fade only
+    const isReload = (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming)?.type === 'reload';
+    const ditherShown = sessionStorage.getItem('ditherShown');
+    
+    if (ditherShown && !isReload) {
+      // Navigation from another page - skip to content immediately
+      setShowDither(false);
+      setShowContent(true);
+      setHasShownContentOnce(true);
+    } else {
+      // First time visiting or page reload - show dither
+      setDitherReady(true);
+      const initialTimer = setTimeout(() => {
+        handleInitialFadeOut();
+        sessionStorage.setItem('ditherShown', 'true');
+      }, 4000);
+      
+      return () => clearTimeout(initialTimer);
+    }
+  }, []); // Empty dependency array for initial effect only
 
   // Separate effect for inactivity detection
   useEffect(() => {
@@ -179,6 +196,7 @@ export default function Home() {
         <>
           <div 
             className={`fixed inset-0 z-50 ${ditherFadingOut ? 'animate-fade-out' : ''}`}
+            style={{ opacity: ditherReady ? 1 : 0 }}
           >
             <Dither 
               enableMouseInteraction={false}
