@@ -166,16 +166,16 @@ export default function SkillsPage() {
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2">
-                        {exp.highlights.map((highlight, idx) => (
-                          <span
-                            key={idx}
-                            className="text-xs px-3 py-1 rounded-full bg-[#333] text-[#ccc] border border-[#444]"
-                          >
-                            {highlight}
-                          </span>
-                        ))}
-                      </div>
+                                             <div className="flex flex-wrap gap-2">
+                         {exp.highlights.map((highlight, idx) => (
+                           <span
+                             key={idx}
+                             className="text-xs px-3 py-1 rounded-full bg-[#333] text-[#ccc] border border-[#444] hover:bg-[#444] hover:border-[#555] hover:text-[#e5e5e5] transition-all duration-200 cursor-pointer"
+                           >
+                             {highlight}
+                           </span>
+                         ))}
+                       </div>
                     </div>
                   </div>
                 </div>
