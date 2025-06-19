@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Calendar, MapPin, Code, Languages, GraduationCap, Briefcase } from "lucide-react"
+import { ArrowLeft, Code, MapPin } from "lucide-react"
 
 // SVG icons from public folder
 const PythonIcon = "/icons/python.svg"
@@ -18,67 +18,74 @@ export default function SkillsPage() {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null)
 
   const technicalSkills = [
-    { name: "Python", level: "Advanced", icon: PythonIcon, color: "#3776ab" },
-    { name: "Next.js", level: "Advanced", icon: NextJSIcon, color: "#000000" },
-    { name: "Angular", level: "Advanced", icon: AngularIcon, color: "#dd0031" },
-    { name: "MySQL", level: "Intermediate", icon: MySQLIcon, color: "#00546B" },
-    { name: "React", level: "Advanced", icon: ReactIcon, color: "#61dafb" },
-    { name: "TypeScript", level: "Advanced", icon: TypeScriptIcon, color: "#3178c6" },
-    { name: "Node.js", level: "Intermediate", icon: NodeJSIcon, color: "#339933" },
-    { name: "Git", level: "Advanced", icon: GitIcon, color: "#f05032" },
+    { name: "Python", icon: PythonIcon, color: "#3776ab" },
+    { name: "Next.js", icon: NextJSIcon, color: "#000000" },
+    { name: "Angular", icon: AngularIcon, color: "#dd0031" },
+    { name: "MySQL", icon: MySQLIcon, color: "#00546B" },
+    { name: "React", icon: ReactIcon, color: "#61dafb" },
+    { name: "TypeScript", icon: TypeScriptIcon, color: "#3178c6" },
+    { name: "Node.js", icon: NodeJSIcon, color: "#339933" },
+    { name: "Git", icon: GitIcon, color: "#f05032" },
   ]
 
-
-
-  const education = [
+  const experiences = [
     {
-      institution: "Duale Hochschule Baden-Württemberg",
-      degree: "Wirtschaftsinformatik, Sales & Consulting",
-      location: "Mannheim, BW",
-      period: "01.10.2022 – 30.09.2025",
-      current: true,
-    },
-    {
-      institution: "Universität Mannheim",
-      degree: "Wirtschaftsinformatik (ohne Abschluss)",
-      location: "Mannheim, BW",
-      period: "22.09.2020 – 27.07.2022",
-      current: false,
-    },
-    {
-      institution: "Leibniz-Gymnasium Rottweil",
-      degree: "Leistungsfächer: Wirtschaft, Chemie",
-      location: "Rottweil, BW",
-      period: "Graduated 31.07.2020",
-      current: false,
-    },
-  ]
-
-  const experience = [
-    {
-      company: "PHOENIX International Holdings GmbH",
+      type: "work",
+      title: "PHOENIX International Holdings",
       role: "Dual Student",
-      location: "Mannheim / Fürth, BW / Bayern",
-      period: "Sep. 2022 – Present",
-      current: true,
-      responsibilities: [
-        "Automated processes using RPA tools, including Excel integration and web queries",
-        "Created BI migration guides and developed Power BI templates for standardized reporting",
-        "Gained insights into SAP systems and SAP ServiceNow, supported training documentation",
-        "Led IT process transitions from ITIL v3 to ITIL 4 for process standardization and efficiency",
-        "Analyzed phishing risks and developed practical awareness and prevention concepts",
-      ],
+      location: "Mannheim",
+      startDate: "2022-09-01",
+      endDate: null,
+      highlights: ["RPA & Process Automation", "BI Templates & SAP Systems", "ITIL Process Optimization", "Cybersecurity Prevention & Awareness"],
+      status: "active",
+    },
+    {
+      type: "education",
+      title: "DHBW Baden-Württemberg",
+      role: "Wirtschaftsinformatik, Sales & Consulting",
+      location: "Mannheim",
+      startDate: "2022-10-01",
+      endDate: "2025-09-30",
+      highlights: ["Dual Study Program"],
+      status: "active",
+    },
+    {
+      type: "education",
+      title: "Leibniz-Gymnasium Rottweil",
+      role: "Abitur",
+      location: "Rottweil",
+      startDate: "2011-09-01",
+      endDate: "2020-07-31",
+      highlights: ["Economics & Chemistry Focus"],
+      status: "completed",
     },
   ]
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return {
+      month: date.toLocaleDateString("en", { month: "short" }).toUpperCase(),
+      year: date.getFullYear(),
+    }
+  }
 
+  const getDuration = (start: string, end: string | null) => {
+    const startDate = new Date(start)
+    const endDate = end ? new Date(end) : new Date()
+    const months = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth())
+    const years = Math.floor(months / 12)
+    const remainingMonths = months % 12
+
+    if (years === 0) return `${months}mo`
+    if (remainingMonths === 0) return `${years}y`
+    return `${years}y ${remainingMonths}mo`
+  }
 
   return (
     <div
       className="min-h-screen bg-[#1a1a1a] text-[#e5e5e5]"
       style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
     >
-      {/* Top fade overlay */}
       <div className="fixed left-0 right-0 h-14 bg-gradient-to-b from-[#1a1a1a] via-[#1a1a1a] to-transparent z-10 pointer-events-none"></div>
 
       <div className="max-w-2xl mx-auto px-6 py-32">
@@ -92,129 +99,117 @@ export default function SkillsPage() {
             <span>Back to home</span>
           </Link>
           <h1 className="text-2xl font-medium mb-4 text-[#e5e5e5]">Skills & Experience</h1>
-          <p className="text-[#888] text-base">
-            Technical expertise, educational background, and professional journey.
-          </p>
+          <p className="text-[#888] text-base">Technical expertise and professional journey.</p>
         </header>
 
-        {/* Professional Experience Timeline */}
+        {/* Experience Cards */}
         <section className="mb-20">
-          <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
-            <Briefcase className="w-5 h-5" />
-            Professional Experience
-          </h2>
-          <div className="space-y-10">
-            {experience.map((exp, index) => (
-              <div key={index} className="relative pl-8">
-                {/* Timeline dot */}
-                <div
-                  className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 ${
-                    exp.current ? "bg-[#6b46c1] border-[#6b46c1]" : "bg-[#1a1a1a] border-[#555]"
-                  }`}
-                ></div>
+          <h2 className="text-lg font-medium mb-12 text-[#e5e5e5]">Journey</h2>
 
-                <div className="space-y-3">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                    <div>
-                      <h3 className="text-[#e5e5e5] font-medium">{exp.company}</h3>
-                      <p className="text-[#888] text-sm">{exp.role}</p>
+          <div className="space-y-8">
+            {experiences.map((exp, index) => {
+              const startDate = formatDate(exp.startDate)
+              const endDate = exp.endDate ? formatDate(exp.endDate) : null
+              const duration = getDuration(exp.startDate, exp.endDate)
+
+              return (
+                <div key={index} className="relative group">
+                  {/* Duration Badge */}
+                  <div className="absolute -top-3 -right-3 z-10">
+                    <div
+                      className={`
+                      px-3 py-1 rounded-full text-xs font-mono border
+                      ${
+                        exp.status === "active"
+                          ? "bg-[#6b46c1] border-[#6b46c1] text-white"
+                          : "bg-[#333] border-[#555] text-[#888]"
+                      }
+                    `}
+                    >
+                      {duration}
                     </div>
-                    <div className="flex items-center gap-4 text-[#888] text-sm">
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        <span>{exp.location}</span>
+                  </div>
+
+                  {/* Main Card */}
+                  <div className="relative overflow-hidden rounded-xl">
+                                         {/* Date Sidebar */}
+                     <div className="absolute left-0 top-0 bottom-0 w-20 bg-[#333] rounded-l-xl flex flex-col items-center justify-center text-center">
+                       {endDate && (
+                         <>
+                           <div className="text-[#888] text-xs font-mono mb-1">{endDate.month}</div>
+                           <div className="text-white text-xl font-bold">{endDate.year}</div>
+                           <div className="w-6 h-px bg-[#555] my-3"></div>
+                         </>
+                       )}
+
+                       {!endDate && (
+                         <>
+                           <div className="w-2 h-2 rounded-full bg-[#6b46c1] animate-pulse"></div>
+                           <div className="w-6 h-px bg-[#555] my-3"></div>
+                         </>
+                       )}
+
+                       <div className="text-[#888] text-xs font-mono mb-1">{startDate.month}</div>
+                       <div className="text-white text-xl font-bold">{startDate.year}</div>
+                     </div>
+
+                    {/* Content */}
+                    <div className="pl-24 pr-6 py-6 bg-[#222] hover:bg-[#252525] transition-colors rounded-r-xl">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="text-[#e5e5e5] font-medium text-lg mb-1">{exp.title}</h3>
+                          <p className="text-[#888] text-base">{exp.role}</p>
+                        </div>
+                        <div className="flex items-center gap-1 text-[#666] text-sm">
+                          <MapPin className="w-3 h-3" />
+                          <span>{exp.location}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        <span>{exp.period}</span>
+
+                      <div className="flex flex-wrap gap-2">
+                        {exp.highlights.map((highlight, idx) => (
+                          <span
+                            key={idx}
+                            className="text-xs px-3 py-1 rounded-full bg-[#333] text-[#ccc] border border-[#444]"
+                          >
+                            {highlight}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   </div>
-                  <ul className="space-y-2 text-[#888] text-sm">
-                    {exp.responsibilities.map((responsibility, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="text-[#555] mt-1.5">•</span>
-                        <span>{responsibility}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </section>
-
-        {/* Education Timeline */}
-        <section className="mb-20">
-          <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
-            <GraduationCap className="w-5 h-5" />
-            Education
-          </h2>
-          <div className="space-y-10">
-            {education.map((edu, index) => (
-              <div key={index} className="relative pl-8">
-                {/* Timeline line */}
-                {index !== education.length - 1 && <div className="absolute left-2 top-8 w-px h-16 bg-[#333]"></div>}
-                {/* Timeline dot */}
-                <div
-                  className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 ${
-                    edu.current ? "bg-[#6b46c1] border-[#6b46c1]" : "bg-[#1a1a1a] border-[#555]"
-                  }`}
-                ></div>
-
-                <div className="space-y-2">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                    <h3 className="text-[#e5e5e5] font-medium">{edu.institution}</h3>
-                    <div className="flex items-center gap-4 text-[#888] text-sm">
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        <span>{edu.location}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        <span>{edu.period}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-[#888] text-sm">{edu.degree}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-
 
         {/* Technical Skills */}
         <section>
-          <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
+          <h2 className="text-lg font-medium mb-8 text-[#e5e5e5] flex items-center gap-2">
             <Code className="w-5 h-5" />
             Technical Skills
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-6">
             {technicalSkills.map((skill) => {
               const isHovered = hoveredSkill === skill.name
               return (
                 <div
                   key={skill.name}
-                  className="group p-4 rounded-lg border border-[#333] hover:border-[#555] transition-all duration-200 cursor-pointer"
+                  className="group transition-all duration-200 cursor-pointer"
                   onMouseEnter={() => setHoveredSkill(skill.name)}
                   onMouseLeave={() => setHoveredSkill(null)}
                 >
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-5 h-5 transition-all duration-200">
-                      <img
-                        src={skill.icon}
-                        alt={skill.name}
-                        className="w-full h-full transition-all duration-200"
-                        style={{
-                          filter: isHovered ? "none" : "grayscale(100%) brightness(0.7) opacity(0.6)",
-                        }}
-                      />
-                    </div>
-                    <span className="text-[#e5e5e5] font-medium text-sm">{skill.name}</span>
+                  <div className="w-10 h-10 transition-all duration-200">
+                    <img
+                      src={skill.icon || "/placeholder.svg"}
+                      alt={skill.name}
+                      className="w-full h-full transition-all duration-200"
+                      style={{
+                        filter: isHovered ? "none" : "grayscale(100%) brightness(0.7) opacity(0.6)",
+                      }}
+                    />
                   </div>
-                  <span className="text-[#888] text-xs">{skill.level}</span>
                 </div>
               )
             })}
