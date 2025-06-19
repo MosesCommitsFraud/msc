@@ -31,7 +31,7 @@ export default function SkillsPage() {
   const experiences = [
     {
       type: "work",
-      title: "PHOENIX International Holdings",
+      title: "PHOENIX International Holdings GmbH",
       role: "Dual Student",
       location: "Mannheim",
       startDate: "2022-09-01",
@@ -41,7 +41,7 @@ export default function SkillsPage() {
     },
     {
       type: "education",
-      title: "DHBW Baden-Württemberg",
+      title: "DHBW Mannheim",
       role: "Wirtschaftsinformatik, Sales & Consulting",
       location: "Mannheim",
       startDate: "2022-10-01",
