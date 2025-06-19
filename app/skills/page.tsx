@@ -117,7 +117,7 @@ export default function SkillsPage() {
       {/* Top fade overlay */}
       <div className="fixed left-0 right-0 h-14 bg-gradient-to-b from-[#1a1a1a] via-[#1a1a1a] to-transparent z-10 pointer-events-none"></div>
 
-      <div className="max-w-4xl mx-auto px-6 py-32">
+      <div className="max-w-2xl mx-auto px-6 py-32">
         {/* Header */}
         <header className="mb-16">
           <Link
@@ -134,12 +134,12 @@ export default function SkillsPage() {
         </header>
 
         {/* Technical Skills */}
-        <section className="mb-16">
-          <h2 className="text-lg font-medium mb-8 text-[#e5e5e5] flex items-center gap-2">
+        <section className="mb-20">
+          <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
             <Code className="w-5 h-5" />
             Technical Skills
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {technicalSkills.map((skill) => {
               const isHovered = hoveredSkill === skill.name
               return (
@@ -169,46 +169,14 @@ export default function SkillsPage() {
           </div>
         </section>
 
-        {/* Languages */}
-        <section className="mb-16">
-          <h2 className="text-lg font-medium mb-8 text-[#e5e5e5] flex items-center gap-2">
-            <Languages className="w-5 h-5" />
-            Languages
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {languages.map((language) => {
-              const IconComponent = language.icon
-              const isHovered = hoveredSkill === language.name
-              return (
-                <div
-                  key={language.name}
-                  className="group p-4 rounded-lg border border-[#333] hover:border-[#555] transition-all duration-200 cursor-pointer"
-                  onMouseEnter={() => setHoveredSkill(language.name)}
-                  onMouseLeave={() => setHoveredSkill(null)}
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <IconComponent
-                      className="w-5 h-5 transition-colors duration-200"
-                      style={{
-                        color: isHovered ? language.color : "#888",
-                      }}
-                    />
-                    <span className="text-[#e5e5e5] font-medium text-sm">{language.name}</span>
-                  </div>
-                  <span className="text-[#888] text-xs">{language.level}</span>
-                </div>
-              )
-            })}
-          </div>
-        </section>
 
         {/* Education Timeline */}
-        <section className="mb-16">
-          <h2 className="text-lg font-medium mb-8 text-[#e5e5e5] flex items-center gap-2">
+        <section className="mb-20">
+          <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
             <GraduationCap className="w-5 h-5" />
             Education
           </h2>
-          <div className="space-y-8">
+          <div className="space-y-10">
             {education.map((edu, index) => (
               <div key={index} className="relative pl-8">
                 {/* Timeline line */}
@@ -242,12 +210,12 @@ export default function SkillsPage() {
         </section>
 
         {/* Experience Timeline */}
-        <section className="mb-16">
-          <h2 className="text-lg font-medium mb-8 text-[#e5e5e5] flex items-center gap-2">
+        <section className="mb-20">
+          <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
             <Briefcase className="w-5 h-5" />
             Professional Experience
           </h2>
-          <div className="space-y-8">
+          <div className="space-y-10">
             {experience.map((exp, index) => (
               <div key={index} className="relative pl-8">
                 {/* Timeline dot */}
@@ -290,11 +258,11 @@ export default function SkillsPage() {
 
         {/* Projects */}
         <section>
-          <h2 className="text-lg font-medium mb-8 text-[#e5e5e5] flex items-center gap-2">
+          <h2 className="text-lg font-medium mb-10 text-[#e5e5e5] flex items-center gap-2">
             <Code className="w-5 h-5" />
             Key Projects
           </h2>
-          <div className="grid gap-6">
+          <div className="grid gap-8">
             {projects.map((project, index) => (
               <div key={index} className="p-6 rounded-lg border border-[#333] hover:border-[#555] transition-colors">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
