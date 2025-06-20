@@ -15,6 +15,8 @@ const AngularIcon = "/icons/angular.svg"
 const MySQLIcon = "/icons/mysql.svg"
 const TailwindIcon = "/icons/tailwindcss.svg"
 const JSONIcon = "/icons/json.svg"
+const AzureIcon = "/icons/azure.svg"
+const GeminiIcon = "/icons/gemini.svg"
 
 export default function ProjectsPage() {
   const [hoveredProject, setHoveredProject] = useState<string | null>(null)
@@ -91,11 +93,10 @@ export default function ProjectsPage() {
   const completedProjects = [
     {
       title: "Salamon",
-      description: "Intelligent deck building assistant for Yu-Gi-Oh!",
+      description: "Intelligent deck building assistant for Yu-Gi-Oh! Includes a RAG model and several self-trained models based on Embeddings.",
       repositories: {
-        frontend: "your-username/salamon-frontend",
-        backend: "your-username/salamon-backend",
-        huggingface: "your-username/salamon-model"
+        frontend: "MosesCommitsFraud/Salamon-Frontend",
+        backend: "MosesCommitsFraud/Salamon-Backend"
       },
       demoUrl: null,
       status: "completed",
@@ -103,9 +104,11 @@ export default function ProjectsPage() {
       technologies: [
         { name: "Python", icon: PythonIcon },
         { name: "Next.js", icon: NextJSIcon },
-        { name: "TypeScript", icon: TypeScriptIcon },
+        { name: "Tailwind", icon: TailwindIcon },
+        { name: "Azure RAG", icon: AzureIcon },
+        { name: "Gemini", icon: GeminiIcon }
       ],
-      highlights: ["Machine Learning", "Azure RAG", "Strategy AI"],
+      highlights: ["Machine Learning", "Azure RAG", "Gemini"],
       category: "ai",
     },
     {
@@ -398,8 +401,21 @@ export default function ProjectsPage() {
                   <div className="pt-4 border-t border-[#333] space-y-3">
                                         <div className="grid grid-cols-4 gap-1">
                       {(() => {
-                        const repoCount = Object.keys(project.repositories).length;
-                        const hasDemo = !!project.demoUrl;
+                        // Count total buttons that will be rendered
+                        const buttons = [];
+                        if (project.demoUrl) buttons.push('demo');
+                        if ((project.repositories as any).github) buttons.push('github');
+                        if ((project.repositories as any).frontend) buttons.push('frontend');
+                        if ((project.repositories as any).backend) buttons.push('backend');
+                        if ((project.repositories as any).huggingface) buttons.push('huggingface');
+                        
+                        const totalButtons = buttons.length;
+                        const colSpan = totalButtons === 1 ? 'col-span-4' : 
+                                       totalButtons === 2 ? 'col-span-2' : 
+                                       totalButtons === 3 ? 'col-span-1' : 'col-span-1';
+                        
+                        // For 3 buttons, make the first one span 2 columns
+                        const firstColSpan = totalButtons === 3 ? 'col-span-2' : colSpan;
                         
                         return (
                           <>
@@ -415,11 +431,7 @@ export default function ProjectsPage() {
                                     }
                                   }
                                 }}
-                                className={`px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${
-                                  repoCount === 0 ? 'col-span-4' : 
-                                  repoCount === 1 ? 'col-span-3' :
-                                  repoCount === 2 ? 'col-span-2' : 'col-span-1'
-                                }`}
+                                className={`px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${firstColSpan}`}
                               >
                                 <ExternalLink className="w-3 h-3" />
                                 Demo
@@ -428,23 +440,16 @@ export default function ProjectsPage() {
                             {(project.repositories as any).github && (
                               <button 
                                 onClick={() => window.open(`https://github.com/${(project.repositories as any).github}`, '_blank')}
-                                className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${
-                                  !hasDemo && repoCount === 1 ? 'col-span-4' :
-                                  !hasDemo && repoCount === 2 ? 'col-span-2' :
-                                  !hasDemo && repoCount === 3 ? 'col-span-1' : 'col-span-1'
-                                }`}
+                                className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${project.demoUrl ? colSpan : firstColSpan}`}
                               >
                                 <Github className="w-3 h-3" />
-                                {!hasDemo && repoCount === 1 ? <span>Code</span> : ''}
+                                {totalButtons === 1 ? <span>Code</span> : ''}
                               </button>
                             )}
                             {(project.repositories as any).frontend && (
                               <button 
                                 onClick={() => window.open(`https://github.com/${(project.repositories as any).frontend}`, '_blank')}
-                                className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${
-                                  !hasDemo && repoCount === 2 ? 'col-span-2' :
-                                  !hasDemo && repoCount === 3 ? 'col-span-2' : 'col-span-1'
-                                }`}
+                                className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${colSpan}`}
                               >
                                 <Github className="w-3 h-3" />
                                 <span>FE</span>
@@ -453,9 +458,7 @@ export default function ProjectsPage() {
                             {(project.repositories as any).backend && (
                               <button 
                                 onClick={() => window.open(`https://github.com/${(project.repositories as any).backend}`, '_blank')}
-                                className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${
-                                  !hasDemo && repoCount === 3 ? 'col-span-1' : 'col-span-1'
-                                }`}
+                                className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${colSpan}`}
                               >
                                 <Github className="w-3 h-3" />
                                 <span>BE</span>
@@ -464,7 +467,7 @@ export default function ProjectsPage() {
                             {(project.repositories as any).huggingface && (
                               <button 
                                 onClick={() => window.open(`https://huggingface.co/${(project.repositories as any).huggingface}`, '_blank')}
-                                className="px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 col-span-1"
+                                className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${colSpan}`}
                               >
                                 <span style={{ filter: 'grayscale(100%)' }}>🤗</span>
                               </button>
