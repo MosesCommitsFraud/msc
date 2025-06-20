@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { ArrowLeft, ExternalLink, Github, Calendar } from "lucide-react"
+import { getRepoLastCommit } from "../../lib/github"
 
 // SVG icons from public folder
 const PythonIcon = "/icons/python.svg"
@@ -12,66 +13,66 @@ const NodeJSIcon = "/icons/nodejs.svg"
 const TypeScriptIcon = "/icons/typescript.svg"
 const AngularIcon = "/icons/angular.svg"
 const MySQLIcon = "/icons/mysql.svg"
+const TailwindIcon = "/icons/tailwindcss.svg"
+const JSONIcon = "/icons/json.svg"
 
 export default function ProjectsPage() {
   const [hoveredProject, setHoveredProject] = useState<string | null>(null)
+  const [repoUpdates, setRepoUpdates] = useState<Record<string, string>>({})
 
   const activeProjects = [
     {
-      title: "Portfolio v3",
-      subtitle: "Personal Website & Portfolio",
+      title: "Portfolio Page",
       description:
         "A modern, interactive portfolio showcasing my work and skills. Features custom animations, responsive design, and creative layouts. Built with Next.js and deployed on Vercel with continuous integration.",
-      lastUpdated: "2 days ago",
+      githubRepo: "MosesCommitsFraud/msc",
+      demoUrl: null,
       status: "active",
       type: "Personal",
       technologies: [
         { name: "Next.js", icon: NextJSIcon },
-        { name: "TypeScript", icon: TypeScriptIcon },
+        { name: "Tailwind", icon: TailwindIcon },
       ],
       highlights: ["Custom Animations", "Responsive Design", "Creative Layouts"],
       impact: "Showcases professional work and technical skills",
     },
     {
-      title: "AI Learning Platform",
-      subtitle: "Educational Technology Platform",
+      title: "Hiraeth Theme",
       description:
-        "An adaptive learning platform that uses AI to personalize educational content for students. Features real-time progress tracking, intelligent content recommendations, and comprehensive analytics for educators.",
-      lastUpdated: "1 week ago",
+        "My own custom theme based in Cursor Dark. I just like purple so i made it purple.",
+      githubRepo: "MosesCommitsFraud/hiraeth",
+      demoUrl: "https://marketplace.visualstudio.com/items?itemName=MosesCommitsFraud.hiraeth",
       status: "active",
-      type: "Study Project",
+      type: "Personal",
       technologies: [
-        { name: "Next.js", icon: NextJSIcon },
-        { name: "Python", icon: PythonIcon },
-        { name: "TypeScript", icon: TypeScriptIcon },
+        { name: "JSON", icon: JSONIcon },
       ],
-      highlights: ["AI Personalization", "Real-time Analytics", "Adaptive Learning"],
-      impact: "Enhances learning outcomes through personalization",
+      highlights: ["Purple", "Dark Theme", "Cursor"],
+      impact: "I just like purple",
     },
     {
-      title: "Smart Campus Navigator",
-      subtitle: "AR-Enhanced University Navigation",
+      title: "Cyberpunk 2077 UI",
       description:
-        "An augmented reality application that helps students navigate university campuses with real-time directions, building information, and event notifications. Features indoor mapping, accessibility routes, and integration with campus services.",
-      lastUpdated: "3 weeks ago",
+        "Fun project to recreate the UI of Cyberpunk 2077 in NextJs. I've been working on and off on this for a while now.",
+      githubRepo: "MosesCommitsFraud/CyberpunkUI",
+      demoUrl: "https://cyberpunk-ui-six.vercel.app",
       status: "hold",
-      type: "Study Project",
+      type: "Fun Project",
       technologies: [
-        { name: "React", icon: ReactIcon },
-        { name: "TypeScript", icon: TypeScriptIcon },
-        { name: "Node.js", icon: NodeJSIcon },
+        { name: "NextJs", icon: NextJSIcon },
+        { name: "Tailwind", icon: TailwindIcon },
       ],
-      highlights: ["Augmented Reality", "Indoor Mapping", "Accessibility Features"],
-      impact: "Improves campus navigation and accessibility",
+      highlights: ["Cyberpunk 2077", "Glows and Complex Polygons"],
+      impact: "Cyberpunk UI recreated in NextJs",
     },
   ]
 
   const completedProjects = [
     {
       title: "Salamon",
-      subtitle: "AI-Powered Card Game Deck Builder",
       description: "Intelligent deck building assistant for Yu-Gi-Oh! with machine learning optimization.",
-      lastUpdated: "3 months ago",
+      githubRepo: "your-username/salamon",
+      demoUrl: null,
       status: "completed",
       type: "Study Project",
       technologies: [
@@ -84,9 +85,9 @@ export default function ProjectsPage() {
     },
     {
       title: "Evalo",
-      subtitle: "Feedback Analysis Platform",
       description: "Scalable sentiment analysis tool for educational feedback with comprehensive data security.",
-      lastUpdated: "3 months ago",
+      githubRepo: "your-username/evalo",
+      demoUrl: null,
       status: "completed",
       type: "Study Project",
       technologies: [
@@ -98,9 +99,9 @@ export default function ProjectsPage() {
     },
     {
       title: "Stundenstapel",
-      subtitle: "School Management System",
       description: "Comprehensive web application for school inventory and loan management with modular architecture.",
-      lastUpdated: "8 months ago",
+      githubRepo: "your-username/stundenstapel",
+      demoUrl: null,
       status: "completed",
       type: "Study Project",
       technologies: [
@@ -112,9 +113,9 @@ export default function ProjectsPage() {
     },
     {
       title: "Become Consulting",
-      subtitle: "Student Consulting Firm",
       description: "Co-founded consulting firm developing business strategies and process optimization solutions.",
-      lastUpdated: "2 months ago",
+      githubRepo: null,
+      demoUrl: null,
       status: "completed",
       type: "Business",
       technologies: [],
@@ -122,6 +123,32 @@ export default function ProjectsPage() {
       category: "business",
     },
   ]
+
+  useEffect(() => {
+    const fetchRepoUpdates = async () => {
+      const updates: Record<string, string> = {}
+      
+      // Fetch updates for all projects with GitHub repos
+      const allProjects = [...activeProjects, ...completedProjects]
+      
+      for (const project of allProjects) {
+        if (project.githubRepo) {
+          const [owner, repo] = project.githubRepo.split('/')
+          const lastUpdate = await getRepoLastCommit(owner, repo)
+          updates[project.title] = lastUpdate
+        }
+      }
+      
+      setRepoUpdates(updates)
+    }
+
+    fetchRepoUpdates()
+  }, [])
+
+  // Helper function to get the display date
+  const getLastUpdated = (project: any) => {
+    return repoUpdates[project.title] || project.lastUpdated
+  }
 
   return (
     <div
@@ -173,14 +200,13 @@ export default function ProjectsPage() {
                         <h3 className="text-2xl font-semibold text-[#e5e5e5]">{project.title}</h3>
                         <span className="px-3 py-1 bg-[#333] text-[#888] rounded-full text-xs">{project.type}</span>
                       </div>
-                      <p className="text-[#888] text-lg mb-4">{project.subtitle}</p>
                       <p className="text-[#ccc] leading-relaxed">{project.description}</p>
                     </div>
 
                     <div className="flex items-center gap-4 text-sm text-[#888]">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        <span>Updated {project.lastUpdated}</span>
+                        <span>Updated {getLastUpdated(project)}</span>
                       </div>
                       <div className="w-px h-4 bg-[#444]"></div>
                       <span>{project.impact}</span>
@@ -220,13 +246,26 @@ export default function ProjectsPage() {
                     </div>
 
                     <div className="flex gap-2 pt-4 border-t border-[#333]">
-                      <button className="flex-1 px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors flex items-center justify-center gap-2">
-                        <ExternalLink className="w-4 h-4" />
-                        View Demo
-                      </button>
-                      <button className="px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors">
-                        <Github className="w-4 h-4" />
-                      </button>
+                      {project.demoUrl && (
+                        <button 
+                          onClick={() => project.demoUrl && window.open(project.demoUrl, '_blank')}
+                          className="flex-1 px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors flex items-center justify-center gap-2"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          View Demo
+                        </button>
+                      )}
+                      {project.githubRepo && (
+                        <button 
+                          onClick={() => window.open(`https://github.com/${project.githubRepo}`, '_blank')}
+                          className={`px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors ${
+                            !project.demoUrl ? 'flex-1 flex items-center justify-center gap-2' : ''
+                          }`}
+                        >
+                          <Github className="w-4 h-4" />
+                          {!project.demoUrl && <span>View Code</span>}
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -256,7 +295,7 @@ export default function ProjectsPage() {
                     ></div>
                   </div>
 
-                  <p className="text-[#888] text-sm mb-3">{project.subtitle}</p>
+
                   <p className="text-[#ccc] text-sm mb-4 leading-relaxed">{project.description}</p>
 
                   {/* Technologies */}
@@ -289,17 +328,30 @@ export default function ProjectsPage() {
 
                   {/* Footer */}
                   <div className="pt-4 border-t border-[#333] space-y-3">
-                    <div className="flex gap-2">
-                      <button className="flex-1 px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-2">
-                        <ExternalLink className="w-3 h-3" />
-                        View Demo
-                      </button>
-                      <button className="px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors">
-                        <Github className="w-3 h-3" />
-                      </button>
+                                        <div className="flex gap-2">
+                      {project.demoUrl && (
+                        <button 
+                          onClick={() => project.demoUrl && window.open(project.demoUrl, '_blank')}
+                          className="flex-1 px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-2"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          View Demo
+                        </button>
+                      )}
+                      {project.githubRepo && (
+                        <button 
+                          onClick={() => window.open(`https://github.com/${project.githubRepo}`, '_blank')}
+                          className={`px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors ${
+                            !project.demoUrl ? 'flex-1 flex items-center justify-center gap-2' : ''
+                          }`}
+                        >
+                          <Github className="w-3 h-3" />
+                          {!project.demoUrl && <span>View Code</span>}
+                        </button>
+                      )}
                     </div>
                     <div className="text-center">
-                      <span className="text-xs text-[#666]">Updated {project.lastUpdated}</span>
+                      <span className="text-xs text-[#666]">Updated {getLastUpdated(project)}</span>
                     </div>
                   </div>
                 </div>
