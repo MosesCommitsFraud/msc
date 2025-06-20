@@ -169,7 +169,7 @@ export default function ProjectsPage() {
           </Link>
           <h1 className="text-2xl font-medium mb-4 text-[#e5e5e5]">Projects</h1>
           <p className="text-[#888] text-base">
-            A collection of things I've built — from AI-powered applications to business solutions.
+            A collection of things I've built.
           </p>
         </header>
 
