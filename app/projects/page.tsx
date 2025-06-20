@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ArrowLeft, ExternalLink, Github, Calendar } from "lucide-react"
+import { ArrowLeft, ExternalLink, Github, Calendar, X } from "lucide-react"
 import { getRepoLastCommit } from "../../lib/github"
 
 // SVG icons from public folder
@@ -19,6 +19,21 @@ const JSONIcon = "/icons/json.svg"
 export default function ProjectsPage() {
   const [hoveredProject, setHoveredProject] = useState<string | null>(null)
   const [repoUpdates, setRepoUpdates] = useState<Record<string, string>>({})
+  const [modalImage, setModalImage] = useState<string | null>(null)
+
+  // Disable scrolling when modal is open
+  useEffect(() => {
+    if (modalImage) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    
+    // Cleanup function to restore scrolling
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [modalImage])
 
   const activeProjects = [
     {
@@ -39,7 +54,7 @@ export default function ProjectsPage() {
     {
       title: "Hiraeth Theme",
       description:
-        "My own custom theme based in Cursor Dark. I just like purple so i made it purple.",
+        "My own custom theme based on Cursor Dark. I just like purple so i made it purple.",
       githubRepo: "MosesCommitsFraud/hiraeth",
       demoUrl: "https://marketplace.visualstudio.com/items?itemName=MosesCommitsFraud.hiraeth",
       status: "active",
@@ -55,7 +70,7 @@ export default function ProjectsPage() {
       description:
         "Fun project to recreate the UI of Cyberpunk 2077 in NextJs. I've been working on and off on this for a while now.",
       githubRepo: "MosesCommitsFraud/CyberpunkUI",
-      demoUrl: "https://cyberpunk-ui-six.vercel.app",
+      demoUrl: "/assets/CyberpunkUI.png",
       status: "hold",
       type: "Fun Project",
       technologies: [
@@ -248,7 +263,16 @@ export default function ProjectsPage() {
                     <div className="flex gap-2 pt-4 border-t border-[#333]">
                       {project.demoUrl && (
                         <button 
-                          onClick={() => project.demoUrl && window.open(project.demoUrl, '_blank')}
+                          onClick={() => {
+                            if (project.demoUrl) {
+                              const url = project.demoUrl as string
+                              if (url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.jpeg')) {
+                                setModalImage(url)
+                              } else {
+                                window.open(url, '_blank')
+                              }
+                            }
+                          }}
                           className="flex-1 px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors flex items-center justify-center gap-2"
                         >
                           <ExternalLink className="w-4 h-4" />
@@ -331,7 +355,16 @@ export default function ProjectsPage() {
                                         <div className="flex gap-2">
                       {project.demoUrl && (
                         <button 
-                          onClick={() => project.demoUrl && window.open(project.demoUrl, '_blank')}
+                          onClick={() => {
+                            if (project.demoUrl) {
+                              const url = project.demoUrl as string
+                              if (url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.jpeg')) {
+                                setModalImage(url)
+                              } else {
+                                window.open(url, '_blank')
+                              }
+                            }
+                          }}
                           className="flex-1 px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-2"
                         >
                           <ExternalLink className="w-3 h-3" />
@@ -360,6 +393,29 @@ export default function ProjectsPage() {
           </div>
         </section>
       </div>
+
+      {/* Image Modal */}
+      {modalImage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-[0.03] z-50 flex items-center justify-center p-4"
+          onClick={() => setModalImage(null)}
+        >
+          <div className="relative max-w-5xl max-h-full">
+            <button
+              onClick={() => setModalImage(null)}
+              className="absolute -top-3 -right-3 w-7 h-7 bg-[#333] hover:bg-[#444] rounded-full flex items-center justify-center text-[#e5e5e5] transition-colors z-10 border border-[#555]"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <img
+              src={modalImage}
+              alt="Project Demo"
+              className="max-w-full max-h-full object-contain rounded-xl border border-[#333] shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
