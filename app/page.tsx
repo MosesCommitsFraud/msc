@@ -222,22 +222,6 @@ export default function Home() {
                 }}
               />
             </div>
-            {/* Signature overlay */}
-            <div className="absolute bottom-[-16] right-4 w-32 h-32 pointer-events-none">
-              <img 
-                src="/Signature.svg"
-                alt="Signature"
-                className="w-full h-full"
-                style={{
-                  filter: 'brightness(0) invert(1)',
-                  imageRendering: 'auto',
-                  transform: 'translateZ(0)',
-                  backfaceVisibility: 'hidden',
-                  WebkitFontSmoothing: 'antialiased',
-                  MozOsxFontSmoothing: 'grayscale'
-                }}
-              />
-            </div>
           </div>
           {/* Background overlay that fades in as dither fades out */}
           {ditherFadingOut && (
