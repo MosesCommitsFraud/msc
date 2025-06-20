@@ -40,7 +40,9 @@ export default function ProjectsPage() {
       title: "Portfolio Page",
       description:
         "A modern, interactive portfolio showcasing my work and skills. Features custom animations, responsive design, and creative layouts. Built with Next.js and deployed on Vercel with continuous integration.",
-      githubRepo: "MosesCommitsFraud/msc",
+      repositories: {
+        github: "MosesCommitsFraud/msc"
+      },
       demoUrl: null,
       status: "active",
       type: "Personal",
@@ -55,7 +57,9 @@ export default function ProjectsPage() {
       title: "Hiraeth Theme",
       description:
         "My own custom theme based on Cursor Dark. I just like purple so i made it purple.",
-      githubRepo: "MosesCommitsFraud/hiraeth",
+      repositories: {
+        github: "MosesCommitsFraud/hiraeth"
+      },
       demoUrl: "https://marketplace.visualstudio.com/items?itemName=MosesCommitsFraud.hiraeth",
       status: "active",
       type: "Personal",
@@ -69,7 +73,9 @@ export default function ProjectsPage() {
       title: "Cyberpunk 2077 UI",
       description:
         "Fun project to recreate the UI of Cyberpunk 2077 in NextJs. I've been working on and off on this for a while now.",
-      githubRepo: "MosesCommitsFraud/CyberpunkUI",
+      repositories: {
+        github: "MosesCommitsFraud/CyberpunkUI"
+      },
       demoUrl: "/assets/CyberpunkUI.png",
       status: "hold",
       type: "Fun Project",
@@ -85,8 +91,12 @@ export default function ProjectsPage() {
   const completedProjects = [
     {
       title: "Salamon",
-      description: "Intelligent deck building assistant for Yu-Gi-Oh! with machine learning optimization.",
-      githubRepo: "your-username/salamon",
+      description: "Intelligent deck building assistant for Yu-Gi-Oh!",
+      repositories: {
+        frontend: "your-username/salamon-frontend",
+        backend: "your-username/salamon-backend",
+        huggingface: "your-username/salamon-model"
+      },
       demoUrl: null,
       status: "completed",
       type: "Study Project",
@@ -101,7 +111,9 @@ export default function ProjectsPage() {
     {
       title: "Evalo",
       description: "Scalable sentiment analysis tool for educational feedback with comprehensive data security.",
-      githubRepo: "your-username/evalo",
+      repositories: {
+        github: "your-username/evalo"
+      },
       demoUrl: null,
       status: "completed",
       type: "Study Project",
@@ -115,7 +127,9 @@ export default function ProjectsPage() {
     {
       title: "Stundenstapel",
       description: "Comprehensive web application for school inventory and loan management with modular architecture.",
-      githubRepo: "your-username/stundenstapel",
+      repositories: {
+        github: "your-username/stundenstapel"
+      },
       demoUrl: null,
       status: "completed",
       type: "Study Project",
@@ -129,7 +143,7 @@ export default function ProjectsPage() {
     {
       title: "Become Consulting",
       description: "Co-founded consulting firm developing business strategies and process optimization solutions.",
-      githubRepo: null,
+      repositories: {},
       demoUrl: null,
       status: "completed",
       type: "Business",
@@ -147,8 +161,10 @@ export default function ProjectsPage() {
       const allProjects = [...activeProjects, ...completedProjects]
       
       for (const project of allProjects) {
-        if (project.githubRepo) {
-          const [owner, repo] = project.githubRepo.split('/')
+        // Check for GitHub repo (prioritize main github, then frontend, then backend)
+        const githubRepo = (project.repositories as any).github || (project.repositories as any).frontend || (project.repositories as any).backend
+        if (githubRepo) {
+          const [owner, repo] = githubRepo.split('/')
           const lastUpdate = await getRepoLastCommit(owner, repo)
           updates[project.title] = lastUpdate
         }
@@ -279,15 +295,43 @@ export default function ProjectsPage() {
                           View Demo
                         </button>
                       )}
-                      {project.githubRepo && (
+                      {(project.repositories as any).github && (
                         <button 
-                          onClick={() => window.open(`https://github.com/${project.githubRepo}`, '_blank')}
+                          onClick={() => window.open(`https://github.com/${(project.repositories as any).github}`, '_blank')}
                           className={`px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors ${
-                            !project.demoUrl ? 'flex-1 flex items-center justify-center gap-2' : ''
+                            !project.demoUrl && Object.keys(project.repositories).length === 1 ? 'flex-1 flex items-center justify-center gap-2' : ''
                           }`}
                         >
                           <Github className="w-4 h-4" />
-                          {!project.demoUrl && <span>View Code</span>}
+                          {!project.demoUrl && Object.keys(project.repositories).length === 1 && <span>View Code</span>}
+                        </button>
+                      )}
+                      {(project.repositories as any).frontend && (
+                        <button 
+                          onClick={() => window.open(`https://github.com/${(project.repositories as any).frontend}`, '_blank')}
+                          className="px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors flex items-center justify-center gap-2"
+                        >
+                          <Github className="w-4 h-4" />
+                          <span>Frontend</span>
+                        </button>
+                      )}
+                      {(project.repositories as any).backend && (
+                        <button 
+                          onClick={() => window.open(`https://github.com/${(project.repositories as any).backend}`, '_blank')}
+                          className="px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors flex items-center justify-center gap-2"
+                        >
+                          <Github className="w-4 h-4" />
+                          <span>Backend</span>
+                        </button>
+                      )}
+                      {(project.repositories as any).huggingface && (
+                        <button 
+                          onClick={() => window.open(`https://huggingface.co/${(project.repositories as any).huggingface}`, '_blank')}
+                          className="px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors flex items-center justify-center gap-2"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          <span style={{ filter: 'grayscale(100%)' }}>🤗</span>
+                          <span>HF</span>
                         </button>
                       )}
                     </div>
@@ -352,36 +396,82 @@ export default function ProjectsPage() {
 
                   {/* Footer */}
                   <div className="pt-4 border-t border-[#333] space-y-3">
-                                        <div className="flex gap-2">
-                      {project.demoUrl && (
-                        <button 
-                          onClick={() => {
-                            if (project.demoUrl) {
-                              const url = project.demoUrl as string
-                              if (url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.jpeg')) {
-                                setModalImage(url)
-                              } else {
-                                window.open(url, '_blank')
-                              }
-                            }
-                          }}
-                          className="flex-1 px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-2"
-                        >
-                          <ExternalLink className="w-3 h-3" />
-                          View Demo
-                        </button>
-                      )}
-                      {project.githubRepo && (
-                        <button 
-                          onClick={() => window.open(`https://github.com/${project.githubRepo}`, '_blank')}
-                          className={`px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors ${
-                            !project.demoUrl ? 'flex-1 flex items-center justify-center gap-2' : ''
-                          }`}
-                        >
-                          <Github className="w-3 h-3" />
-                          {!project.demoUrl && <span>View Code</span>}
-                        </button>
-                      )}
+                                        <div className="grid grid-cols-4 gap-1">
+                      {(() => {
+                        const repoCount = Object.keys(project.repositories).length;
+                        const hasDemo = !!project.demoUrl;
+                        
+                        return (
+                          <>
+                            {project.demoUrl && (
+                              <button 
+                                onClick={() => {
+                                  if (project.demoUrl) {
+                                    const url = project.demoUrl as string
+                                    if (url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.jpeg')) {
+                                      setModalImage(url)
+                                    } else {
+                                      window.open(url, '_blank')
+                                    }
+                                  }
+                                }}
+                                className={`px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${
+                                  repoCount === 0 ? 'col-span-4' : 
+                                  repoCount === 1 ? 'col-span-3' :
+                                  repoCount === 2 ? 'col-span-2' : 'col-span-1'
+                                }`}
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                                Demo
+                              </button>
+                            )}
+                            {(project.repositories as any).github && (
+                              <button 
+                                onClick={() => window.open(`https://github.com/${(project.repositories as any).github}`, '_blank')}
+                                className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${
+                                  !hasDemo && repoCount === 1 ? 'col-span-4' :
+                                  !hasDemo && repoCount === 2 ? 'col-span-2' :
+                                  !hasDemo && repoCount === 3 ? 'col-span-1' : 'col-span-1'
+                                }`}
+                              >
+                                <Github className="w-3 h-3" />
+                                {!hasDemo && repoCount === 1 ? <span>Code</span> : ''}
+                              </button>
+                            )}
+                            {(project.repositories as any).frontend && (
+                              <button 
+                                onClick={() => window.open(`https://github.com/${(project.repositories as any).frontend}`, '_blank')}
+                                className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${
+                                  !hasDemo && repoCount === 2 ? 'col-span-2' :
+                                  !hasDemo && repoCount === 3 ? 'col-span-2' : 'col-span-1'
+                                }`}
+                              >
+                                <Github className="w-3 h-3" />
+                                <span>FE</span>
+                              </button>
+                            )}
+                            {(project.repositories as any).backend && (
+                              <button 
+                                onClick={() => window.open(`https://github.com/${(project.repositories as any).backend}`, '_blank')}
+                                className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${
+                                  !hasDemo && repoCount === 3 ? 'col-span-1' : 'col-span-1'
+                                }`}
+                              >
+                                <Github className="w-3 h-3" />
+                                <span>BE</span>
+                              </button>
+                            )}
+                            {(project.repositories as any).huggingface && (
+                              <button 
+                                onClick={() => window.open(`https://huggingface.co/${(project.repositories as any).huggingface}`, '_blank')}
+                                className="px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 col-span-1"
+                              >
+                                <span style={{ filter: 'grayscale(100%)' }}>🤗</span>
+                              </button>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
                     <div className="text-center">
                       <span className="text-xs text-[#666]">Updated {getLastUpdated(project)}</span>
