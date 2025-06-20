@@ -15,15 +15,36 @@ interface GitHubCommit {
 
 export async function getRepoLastUpdate(owner: string, repo: string): Promise<string> {
   try {
+    const headers: Record<string, string> = {
+      'Accept': 'application/vnd.github.v3+json',
+    };
+
+    // Add GitHub token if available (for higher rate limits)
+    if (process.env.NEXT_PUBLIC_GITHUB_TOKEN) {
+      headers['Authorization'] = `token ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`;
+    }
+
     const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-        // Add your GitHub token here for higher rate limits (optional)
-        // 'Authorization': `token ${process.env.GITHUB_TOKEN}`,
-      },
+      headers,
     });
 
     if (!response.ok) {
+      if (response.status === 403) {
+        const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining');
+        const rateLimitReset = response.headers.get('X-RateLimit-Reset');
+        
+        if (rateLimitRemaining === '0') {
+          const resetTime = rateLimitReset ? new Date(parseInt(rateLimitReset) * 1000) : null;
+          console.warn(`GitHub API rate limit exceeded. Resets at: ${resetTime?.toLocaleTimeString()}`);
+          return 'Rate limited';
+        }
+      }
+      
+      if (response.status === 404) {
+        console.warn(`Repository not found: ${owner}/${repo}`);
+        return 'Not found';
+      }
+      
       throw new Error(`GitHub API error: ${response.status}`);
     }
 
@@ -43,15 +64,36 @@ export async function getRepoLastUpdate(owner: string, repo: string): Promise<st
 
 export async function getRepoLastCommit(owner: string, repo: string): Promise<string> {
   try {
+    const headers: Record<string, string> = {
+      'Accept': 'application/vnd.github.v3+json',
+    };
+
+    // Add GitHub token if available (for higher rate limits)
+    if (process.env.NEXT_PUBLIC_GITHUB_TOKEN) {
+      headers['Authorization'] = `token ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`;
+    }
+
     const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`, {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-        // Add your GitHub token here for higher rate limits (optional)
-        // 'Authorization': `token ${process.env.GITHUB_TOKEN}`,
-      },
+      headers,
     });
 
     if (!response.ok) {
+      if (response.status === 403) {
+        const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining');
+        const rateLimitReset = response.headers.get('X-RateLimit-Reset');
+        
+        if (rateLimitRemaining === '0') {
+          const resetTime = rateLimitReset ? new Date(parseInt(rateLimitReset) * 1000) : null;
+          console.warn(`GitHub API rate limit exceeded. Resets at: ${resetTime?.toLocaleTimeString()}`);
+          return 'Rate limited';
+        }
+      }
+      
+      if (response.status === 404) {
+        console.warn(`Repository not found: ${owner}/${repo}`);
+        return 'Not found';
+      }
+      
       throw new Error(`GitHub API error: ${response.status}`);
     }
 

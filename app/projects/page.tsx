@@ -17,6 +17,10 @@ const TailwindIcon = "/icons/tailwindcss.svg"
 const JSONIcon = "/icons/json.svg"
 const AzureIcon = "/icons/azure.svg"
 const GeminiIcon = "/icons/gemini.svg"
+const DockerIcon = "/icons/docker.svg"
+const FastAPIIcon = "/icons/fastapi.svg"
+const SupabaseIcon = "/icons/supabase.svg"
+const FirebaseIcon = "/icons/firebase.svg"
 
 export default function ProjectsPage() {
   const [hoveredProject, setHoveredProject] = useState<string | null>(null)
@@ -106,55 +110,83 @@ export default function ProjectsPage() {
         { name: "Next.js", icon: NextJSIcon },
         { name: "Tailwind", icon: TailwindIcon },
         { name: "Azure RAG", icon: AzureIcon },
-        { name: "Gemini", icon: GeminiIcon }
+        { name: "Gemini", icon: GeminiIcon },
+        { name: "FastAPI", icon: FastAPIIcon },
       ],
       highlights: ["Machine Learning", "Azure RAG", "Gemini"],
       category: "ai",
     },
     {
       title: "Evalo",
-      description: "Scalable sentiment analysis tool for educational feedback with comprehensive data security.",
+      description: "Scalable sentiment analysis tool for educational feedback for professors. Has been pushed to production and is has been tested.",
       repositories: {
-        github: "your-username/evalo"
+        frontend: "MosesCommitsFraud/frontend-evalo",
+        huggingface: "spaces/MosesCommitsFraud/BERTSentiment/tree/main"
       },
-      demoUrl: null,
+      demoUrl: "https://frontend-evalo.vercel.app/",
       status: "completed",
       type: "Study Project",
       technologies: [
         { name: "Next.js", icon: NextJSIcon },
-        { name: "TypeScript", icon: TypeScriptIcon },
+        { name: "Tailwind", icon: TailwindIcon },
+        { name: "Python", icon: PythonIcon },
+        { name: "Docker", icon: DockerIcon },
+        { name: "FastAPI", icon: FastAPIIcon },
+        { name: "Supabase", icon: SupabaseIcon },    
       ],
-      highlights: ["Sentiment Analysis", "Authentication"],
+      highlights: ["Sentiment Analysis", "Multitenancy"],
       category: "analytics",
     },
     {
       title: "Stundenstapel",
-      description: "Comprehensive web application for school inventory and loan management with modular architecture.",
+      description: "Comprehensive web application for school inventory. Has been pushed to production and has been tested.",
       repositories: {
-        github: "your-username/stundenstapel"
+        github: "https://github.com/cephalofoil/stundenstapel-frontend"
       },
       demoUrl: null,
       status: "completed",
       type: "Study Project",
       technologies: [
         { name: "Angular", icon: AngularIcon },
-        { name: "TypeScript", icon: TypeScriptIcon },
+        { name: "Tailwind", icon: TailwindIcon },
+        { name: "Firebase", icon: FirebaseIcon },
       ],
       highlights: ["Modular Architecture", "User Management"],
       category: "management",
     },
     {
       title: "Become Consulting",
-      description: "Co-founded consulting firm developing business strategies and process optimization solutions.",
-      repositories: {},
-      demoUrl: null,
+      description: "Co-founded consulting firm developing business strategies and developing a web presence for the client.",
+      repositories: {
+        frontend: "MosesCommitsFraud/become-frontend",
+      },
+      demoUrl: "https://become-consulting.de",
       status: "completed",
       type: "Business",
-      technologies: [],
-      highlights: ["Business Strategy", "Process Optimization"],
+      technologies: [
+        { name: "Next.js", icon: NextJSIcon },
+        { name: "Tailwind", icon: TailwindIcon },
+      ],
+      highlights: ["Business Strategy", "Web Development"],
       category: "business",
     },
   ]
+
+  // Helper function to parse GitHub repository info from URL or path
+  const parseGitHubRepo = (repoString: string): { owner: string; repo: string } | null => {
+    if (!repoString) return null;
+    
+    // Handle full GitHub URLs like "https://github.com/owner/repo"
+    if (repoString.startsWith('https://github.com/')) {
+      const path = repoString.replace('https://github.com/', '');
+      const [owner, repo] = path.split('/');
+      return owner && repo ? { owner, repo } : null;
+    }
+    
+    // Handle repo paths like "owner/repo"
+    const [owner, repo] = repoString.split('/');
+    return owner && repo ? { owner, repo } : null;
+  };
 
   useEffect(() => {
     const fetchRepoUpdates = async () => {
@@ -163,13 +195,27 @@ export default function ProjectsPage() {
       // Fetch updates for all projects with GitHub repos
       const allProjects = [...activeProjects, ...completedProjects]
       
-      for (const project of allProjects) {
+      for (let i = 0; i < allProjects.length; i++) {
+        const project = allProjects[i];
+        
         // Check for GitHub repo (prioritize main github, then frontend, then backend)
         const githubRepo = (project.repositories as any).github || (project.repositories as any).frontend || (project.repositories as any).backend
         if (githubRepo) {
-          const [owner, repo] = githubRepo.split('/')
-          const lastUpdate = await getRepoLastCommit(owner, repo)
-          updates[project.title] = lastUpdate
+          const repoInfo = parseGitHubRepo(githubRepo);
+          if (repoInfo) {
+            try {
+              const lastUpdate = await getRepoLastCommit(repoInfo.owner, repoInfo.repo)
+              updates[project.title] = lastUpdate
+              
+              // Add a small delay between requests to avoid rate limiting
+              if (i < allProjects.length - 1) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+              }
+            } catch (error) {
+              console.error(`Failed to fetch update for ${project.title}:`, error);
+              updates[project.title] = 'Unknown';
+            }
+          }
         }
       }
       
@@ -300,7 +346,11 @@ export default function ProjectsPage() {
                       )}
                       {(project.repositories as any).github && (
                         <button 
-                          onClick={() => window.open(`https://github.com/${(project.repositories as any).github}`, '_blank')}
+                          onClick={() => {
+                            const githubRepo = (project.repositories as any).github;
+                            const url = githubRepo.startsWith('https://') ? githubRepo : `https://github.com/${githubRepo}`;
+                            window.open(url, '_blank');
+                          }}
                           className={`px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors ${
                             !project.demoUrl && Object.keys(project.repositories).length === 1 ? 'flex-1 flex items-center justify-center gap-2' : ''
                           }`}
@@ -311,7 +361,11 @@ export default function ProjectsPage() {
                       )}
                       {(project.repositories as any).frontend && (
                         <button 
-                          onClick={() => window.open(`https://github.com/${(project.repositories as any).frontend}`, '_blank')}
+                          onClick={() => {
+                            const frontendRepo = (project.repositories as any).frontend;
+                            const url = frontendRepo.startsWith('https://') ? frontendRepo : `https://github.com/${frontendRepo}`;
+                            window.open(url, '_blank');
+                          }}
                           className="px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors flex items-center justify-center gap-2"
                         >
                           <Github className="w-4 h-4" />
@@ -320,7 +374,11 @@ export default function ProjectsPage() {
                       )}
                       {(project.repositories as any).backend && (
                         <button 
-                          onClick={() => window.open(`https://github.com/${(project.repositories as any).backend}`, '_blank')}
+                          onClick={() => {
+                            const backendRepo = (project.repositories as any).backend;
+                            const url = backendRepo.startsWith('https://') ? backendRepo : `https://github.com/${backendRepo}`;
+                            window.open(url, '_blank');
+                          }}
                           className="px-4 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-sm text-[#e5e5e5] transition-colors flex items-center justify-center gap-2"
                         >
                           <Github className="w-4 h-4" />
@@ -439,7 +497,11 @@ export default function ProjectsPage() {
                             )}
                             {(project.repositories as any).github && (
                               <button 
-                                onClick={() => window.open(`https://github.com/${(project.repositories as any).github}`, '_blank')}
+                                onClick={() => {
+                                  const githubRepo = (project.repositories as any).github;
+                                  const url = githubRepo.startsWith('https://') ? githubRepo : `https://github.com/${githubRepo}`;
+                                  window.open(url, '_blank');
+                                }}
                                 className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${project.demoUrl ? colSpan : firstColSpan}`}
                               >
                                 <Github className="w-3 h-3" />
@@ -448,7 +510,11 @@ export default function ProjectsPage() {
                             )}
                             {(project.repositories as any).frontend && (
                               <button 
-                                onClick={() => window.open(`https://github.com/${(project.repositories as any).frontend}`, '_blank')}
+                                onClick={() => {
+                                  const frontendRepo = (project.repositories as any).frontend;
+                                  const url = frontendRepo.startsWith('https://') ? frontendRepo : `https://github.com/${frontendRepo}`;
+                                  window.open(url, '_blank');
+                                }}
                                 className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${colSpan}`}
                               >
                                 <Github className="w-3 h-3" />
@@ -457,7 +523,11 @@ export default function ProjectsPage() {
                             )}
                             {(project.repositories as any).backend && (
                               <button 
-                                onClick={() => window.open(`https://github.com/${(project.repositories as any).backend}`, '_blank')}
+                                onClick={() => {
+                                  const backendRepo = (project.repositories as any).backend;
+                                  const url = backendRepo.startsWith('https://') ? backendRepo : `https://github.com/${backendRepo}`;
+                                  window.open(url, '_blank');
+                                }}
                                 className={`px-2 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-1 ${colSpan}`}
                               >
                                 <Github className="w-3 h-3" />
