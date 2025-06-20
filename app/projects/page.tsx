@@ -192,8 +192,13 @@ export default function ProjectsPage() {
                         <span className="text-[#888] text-sm">Built with:</span>
                         <div className="flex items-center gap-2">
                           {project.technologies.map((tech, techIndex) => (
-                            <div key={techIndex} className="w-5 h-5">
-                              <img src={tech.icon || "/placeholder.svg"} alt={tech.name} className="w-full h-full" />
+                            <div key={techIndex} className="w-6 h-6">
+                              <img 
+                                src={tech.icon || "/placeholder.svg"} 
+                                alt={tech.name} 
+                                className="w-full h-full object-contain" 
+                                style={{ imageRendering: 'crisp-edges' }}
+                              />
                             </div>
                           ))}
                         </div>
@@ -255,12 +260,13 @@ export default function ProjectsPage() {
                   {project.technologies.length > 0 && (
                     <div className="flex items-center gap-2 mb-4">
                       {project.technologies.map((tech, techIndex) => (
-                        <div key={techIndex} className="w-4 h-4">
+                        <div key={techIndex} className="w-5 h-5">
                           <img
                             src={tech.icon || "/placeholder.svg"}
                             alt={tech.name}
-                            className="w-full h-full transition-all duration-200"
+                            className="w-full h-full object-contain transition-all duration-200"
                             style={{
+                              imageRendering: 'crisp-edges',
                               filter:
                                 hoveredProject === project.title
                                   ? "none"
@@ -272,16 +278,29 @@ export default function ProjectsPage() {
                     </div>
                   )}
 
+                  {/* Highlights */}
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {project.highlights.slice(0, 2).map((highlight, idx) => (
+                      <span key={idx} className="text-xs px-2 py-1 bg-[#333] text-[#888] rounded-full">
+                        {highlight}
+                      </span>
+                    ))}
+                  </div>
+
                   {/* Footer */}
-                  <div className="flex items-center justify-between pt-4 border-t border-[#333]">
-                    <div className="flex flex-wrap gap-1">
-                      {project.highlights.slice(0, 2).map((highlight, idx) => (
-                        <span key={idx} className="text-xs px-2 py-1 bg-[#333] text-[#888] rounded-full">
-                          {highlight}
-                        </span>
-                      ))}
+                  <div className="pt-4 border-t border-[#333] space-y-3">
+                    <div className="flex gap-2">
+                      <button className="flex-1 px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors flex items-center justify-center gap-2">
+                        <ExternalLink className="w-3 h-3" />
+                        View Demo
+                      </button>
+                      <button className="px-3 py-2 bg-[#333] hover:bg-[#444] rounded-lg text-xs text-[#e5e5e5] transition-colors">
+                        <Github className="w-3 h-3" />
+                      </button>
                     </div>
-                    <span className="text-xs text-[#666]">Updated {project.lastUpdated}</span>
+                    <div className="text-center">
+                      <span className="text-xs text-[#666]">Updated {project.lastUpdated}</span>
+                    </div>
                   </div>
                 </div>
               </div>
