@@ -128,7 +128,7 @@ export default function ProjectsPage() {
       className="min-h-screen bg-[#1a1a1a] text-[#e5e5e5]"
       style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
     >
-      <div className="fixed left-0 right-0 h-14 bg-gradient-to-b from-[#1a1a1a] via-[#1a1a1a] to-transparent z-10 pointer-events-none"></div>
+      <div className="fixed left-0 right-0 h-14 bg-gradient-to-b from-[#1a1a1a] via-[#1a1a1a] to-transparent z-40 pointer-events-none"></div>
 
       <div className="max-w-2xl mx-auto px-6 py-32">
         {/* Header */}
@@ -152,7 +152,7 @@ export default function ProjectsPage() {
             {activeProjects.map((project, index) => (
               <div key={index} className="relative group">
                 {/* Floating status indicator */}
-                <div className="absolute -top-4 left-8 z-10">
+                <div className="absolute -top-4 left-8 z-30">
                   <div
                     className={`flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-medium ${
                       project.status === "hold" ? "bg-[#f59e0b] border-[#f59e0b]" : "bg-[#6b46c1] border-[#6b46c1]"
@@ -196,8 +196,11 @@ export default function ProjectsPage() {
                               <img 
                                 src={tech.icon || "/placeholder.svg"} 
                                 alt={tech.name} 
-                                className="w-full h-full object-contain" 
-                                style={{ imageRendering: 'crisp-edges' }}
+                                className="w-full h-full object-contain transition-all duration-200 cursor-pointer hover:!filter-none" 
+                                style={{ 
+                                  imageRendering: 'crisp-edges',
+                                  filter: "grayscale(100%) brightness(0.7) opacity(0.6)"
+                                }}
                               />
                             </div>
                           ))}
@@ -264,13 +267,10 @@ export default function ProjectsPage() {
                           <img
                             src={tech.icon || "/placeholder.svg"}
                             alt={tech.name}
-                            className="w-full h-full object-contain transition-all duration-200"
+                            className="w-full h-full object-contain transition-all duration-200 cursor-pointer hover:!filter-none"
                             style={{
                               imageRendering: 'crisp-edges',
-                              filter:
-                                hoveredProject === project.title
-                                  ? "none"
-                                  : "grayscale(100%) brightness(0.7) opacity(0.6)",
+                              filter: "grayscale(100%) brightness(0.7) opacity(0.6)",
                             }}
                           />
                         </div>
