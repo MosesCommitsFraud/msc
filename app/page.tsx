@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Dither } from "./components/Dither";
 
-export default function Home() {
+export default function HomePage() {
   const [showDither, setShowDither] = useState(true);
   const [ditherReady, setDitherReady] = useState(false);
   const [ditherFadingOut, setDitherFadingOut] = useState(false);
@@ -11,6 +11,9 @@ export default function Home() {
   const [isReturningToDither, setIsReturningToDither] = useState(false);
   const [contentFadingOut, setContentFadingOut] = useState(false);
   const [hasShownContentOnce, setHasShownContentOnce] = useState(false);
+  const [currentTime, setCurrentTime] = useState("");
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [hoveredSection, setHoveredSection] = useState<string | null>(null);
 
   // Function to handle the initial fade out
   const handleInitialFadeOut = () => {
@@ -115,6 +118,92 @@ export default function Home() {
     };
   }, [showContent, showDither, ditherFadingOut, isReturningToDither, hasShownContentOnce]);
 
+  // Mouse tracking and time update for content view
+  useEffect(() => {
+    if (!showContent) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(
+        now.toLocaleTimeString("en-US", {
+          timeZone: "Europe/Berlin",
+          hour12: false,
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      );
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    updateTime();
+    const timeInterval = setInterval(updateTime, 1000);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      clearInterval(timeInterval);
+    };
+  }, [showContent]);
+
+  const sections = [
+    {
+      id: "current",
+      title: "Current",
+      items: [
+        {
+          title: "AI Platform",
+          description: "Educational technology with personalized learning",
+          href: "#",
+        },
+        {
+          title: "Skills & Experience",
+          description: "Technical skills and professional background",
+          href: "/skills",
+        },
+      ],
+    },
+    {
+      id: "projects",
+      title: "Projects",
+      items: [
+        {
+          title: "Portfolio v3",
+          description: "This website, built with Next.js and creativity",
+          href: "#",
+        },
+        {
+          title: "Salamon",
+          description: "AI-powered deck builder for card games",
+          href: "#",
+        },
+        {
+          title: "All Projects",
+          description: "Complete collection of my work",
+          href: "/projects",
+        },
+      ],
+    },
+    {
+      id: "learning",
+      title: "Learning",
+      items: [
+        {
+          title: "Machine Learning",
+          description: "Deep learning and neural networks",
+          href: "#",
+        },
+        {
+          title: "System Design",
+          description: "Scalable architecture patterns",
+          href: "#",
+        },
+      ],
+    },
+  ];
+
   return (
     <>
       <style jsx global>{`
@@ -130,7 +219,7 @@ export default function Home() {
         @keyframes fadeInUp {
           from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
           }
           to {
             opacity: 1;
@@ -164,9 +253,16 @@ export default function Home() {
             opacity: 1;
           }
         }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
         
         .animate-fade-in-up {
-          animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          opacity: 0;
+          transform: translateY(20px);
         }
         
         .animate-fade-in {
@@ -183,14 +279,11 @@ export default function Home() {
           opacity: 0;
         }
         
-        .delay-150 { animation-delay: 0.15s; }
-        .delay-250 { animation-delay: 0.25s; }
-        .delay-350 { animation-delay: 0.35s; }
-        .delay-450 { animation-delay: 0.45s; }
-        .delay-550 { animation-delay: 0.55s; }
-        .delay-650 { animation-delay: 0.65s; }
-        .delay-750 { animation-delay: 0.75s; }
-        .delay-850 { animation-delay: 0.85s; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
       `}</style>
 
       {/* Dither Background */}
@@ -235,193 +328,160 @@ export default function Home() {
 
       {/* Main Content */}
       {showContent && (
-        <div className={`min-h-screen bg-[#1a1a1a] text-[#e5e5e5] ${contentFadingOut ? 'animate-fade-out' : ''}`} style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-          {/* Top fade overlay */}
-          <div className="fixed left-0 right-0 h-14 bg-gradient-to-b from-[#1a1a1a] via-[#1a1a1a] via-[#1a1a1a] to-transparent z-10 pointer-events-none"></div>
-          
-          <div className="max-w-2xl mx-auto px-6 py-32">
+        <div 
+          className={`min-h-screen bg-[#1a1a1a] text-[#e5e5e5] relative overflow-hidden ${contentFadingOut ? 'animate-fade-out' : ''}`}
+          style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+        >
+          {/* Background gradient that follows mouse */}
+          <div
+            className="fixed w-96 h-96 bg-gradient-radial from-[#6b46c1] to-transparent opacity-5 pointer-events-none transition-all duration-1000 ease-out"
+            style={{
+              left: mousePosition.x - 192,
+              top: mousePosition.y - 192,
+            }}
+          />
+
+          <div className="fixed left-0 right-0 h-14 bg-gradient-to-b from-[#1a1a1a] via-[#1a1a1a] to-transparent z-10 pointer-events-none"></div>
+
+          <div className="max-w-2xl mx-auto px-6 py-32 relative">
             {/* Header */}
-            <header className="mb-24 animate-fade-in-up delay-150" style={{ opacity: 0, transform: 'translateY(30px)' }}>
-              <h1 className="text-lg font-medium mb-4 text-[#e5e5e5]">Moritz Schäfer</h1>
-              <div className="flex items-center gap-2 mb-4 animate-fade-in delay-200" style={{ opacity: 0 }}>
-                {/* Location Icon */}
-                <svg className="w-4 h-4 text-[#888]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4.418 0-8-5.373-8-9.5A8 8 0 0 1 20 11.5C20 15.627 16.418 21 12 21z" />
-                  <circle cx="12" cy="11" r="3" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            <header className="mb-20 animate-fade-in-up">
+              <div className="flex items-start justify-between mb-6">
+                <h1 className="text-lg font-medium text-[#e5e5e5]">Moritz Schäfer</h1>
+                <div className="text-right">
+                  <div className="text-xs text-[#666] mb-1">Local time</div>
+                  <div className="font-mono text-sm text-[#888]">{currentTime}</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 mb-4">
+                <svg
+                  className="w-4 h-4 text-[#888]"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1115 0z"
+                  />
                 </svg>
                 <span className="text-[#888] text-base">Mannheim, Germany</span>
               </div>
-              <p className="text-[#e5e5e5] mb-6 text-base">
-                <em>I like to try new stuff</em>. Experimenting with new AI stuff and current tech trends. I like to build nice looking interfaces.
+
+              <p className="text-[#e5e5e5] mb-4 text-base">
+                I build software that solves problems. Currently working with AI and automation while studying at DHBW.
               </p>
-              <div className="animate-fade-in delay-250" style={{ opacity: 0 }}>
-                <p className="text-[#e5e5e5] text-base">
-                  Currently employed at PHOENIX group as a dual study student.
-                </p>
-              </div>
+              <p className="text-[#e5e5e5] text-base">Dual student at PHOENIX International Holdings.</p>
             </header>
 
-            {/* Three Column Layout: Building, Projects, Writing */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
-              {/* Building Section */}
-              <section className="animate-fade-in-up delay-350" style={{ opacity: 0, transform: 'translateY(30px)' }}>
-                <h2 className="text-base font-medium mb-8 text-[#888]">Building</h2>
-                <div className="space-y-4">
-                  <div>
-                    <a href="#" className="block group">
-                      <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
-                        <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
-                          Craft
-                        </span>
-                        <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </h3>
-                      <p className="text-[#888] text-base">Implementing interfaces and interactions.</p>
-                    </a>
-                  </div>
-                  <div className="animate-fade-in delay-450" style={{ opacity: 0 }}>
-                    <a href="/skills" className="block group">
-                      <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
-                        <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
-                          Skills & Experience
-                        </span>
-                        <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </h3>
-                      <p className="text-[#888] text-base">Technical skills, education, and professional background.</p>
-                    </a>
-                  </div>
-                </div>
-              </section>
+            {/* Three-column layout with hover effects */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+              {sections.map((section, sectionIndex) => (
+                <section
+                  key={section.id}
+                  className={`animate-fade-in-up delay-${(sectionIndex + 1) * 100} relative transition-all duration-300 ${
+                    hoveredSection === section.id ? "bg-[#1f1f1f] -mx-2 px-2 py-4 rounded-lg" : ""
+                  }`}
+                  onMouseEnter={() => setHoveredSection(section.id)}
+                  onMouseLeave={() => setHoveredSection(null)}
+                >
+                  <h2
+                    className={`text-base font-medium mb-6 transition-colors duration-300 ${
+                      hoveredSection === section.id ? "text-[#6b46c1]" : "text-[#888]"
+                    }`}
+                  >
+                    {section.title}
+                  </h2>
 
-              {/* Projects Section */}
-              <section className="animate-fade-in-up delay-350" style={{ opacity: 0, transform: 'translateY(30px)' }}>
-                <h2 className="text-base font-medium mb-8 text-[#888]">Projects</h2>
-                <div className="space-y-6">
-                  <div>
-                    <a href="#" className="block group">
-                      <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
-                        <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
-                          ⌘K
-                        </span>
-                        <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </h3>
-                      <p className="text-[#888] text-base">Composable command menu React component.</p>
-                    </a>
+                  <div className="space-y-4">
+                    {section.items.map((item, itemIndex) => (
+                      <div key={itemIndex} className="group">
+                        <a href={item.href} className="block">
+                          <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
+                            <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
+                              {item.title}
+                            </span>
+                            <svg
+                              className="w-4 h-4 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              />
+                            </svg>
+                          </h3>
+                          <p className="text-[#888] text-base group-hover:text-[#aaa] transition-colors">
+                            {item.description}
+                          </p>
+                        </a>
+                      </div>
+                    ))}
                   </div>
-                  <div className="animate-fade-in delay-450" style={{ opacity: 0 }}>
-                    <a href="#" className="block group">
-                      <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
-                        <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
-                          Writer
-                        </span>
-                        <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </h3>
-                      <p className="text-[#888] text-base">Plain text editor with a focus on performance.</p>
-                    </a>
-                  </div>
-                  <div className="animate-fade-in delay-550" style={{ opacity: 0 }}>
-                    <a href="#" className="block group">
-                      <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
-                        <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
-                          Next Themes
-                        </span>
-                        <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </h3>
-                      <p className="text-[#888] text-base">Perfect dark mode in Next.js apps.</p>
-                    </a>
-                  </div>
-                </div>
-              </section>
-
-              {/* Writing Section */}
-              <section className="animate-fade-in-up delay-350" style={{ opacity: 0, transform: 'translateY(30px)' }}>
-                <h2 className="text-base font-medium mb-8 text-[#888]">Writing</h2>
-                <div className="space-y-6">
-                  <div>
-                    <a href="#" className="block group">
-                      <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
-                        <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
-                          React Hook Getter Pattern
-                        </span>
-                        <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </h3>
-                      <p className="text-[#888] text-base">Simple, efficient React state hook in 50 lines.</p>
-                    </a>
-                  </div>
-                  <div className="animate-fade-in delay-450" style={{ opacity: 0 }}>
-                    <a href="#" className="block group">
-                      <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
-                        <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
-                          Redesign 2021
-                        </span>
-                        <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </h3>
-                      <p className="text-[#888] text-base">Return to simplicity.</p>
-                    </a>
-                  </div>
-                  <div className="animate-fade-in delay-550" style={{ opacity: 0 }}>
-                    <a href="#" className="block group">
-                      <h3 className="text-[#e5e5e5] font-medium mb-1 text-base flex items-center gap-2">
-                        <span className="border-b border-[#333] group-hover:border-[#666] transition-colors">
-                          All writing
-                        </span>
-                        <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </h3>
-                      <p className="text-[#888] text-base">Infrequent thoughts on design and code.</p>
-                    </a>
-                  </div>
-                </div>
-              </section>
+                </section>
+              ))}
             </div>
 
-            {/* Now Section */}
-            <section className="mb-16 animate-fade-in-up delay-650" style={{ opacity: 0, transform: 'translateY(30px)' }}>
-              <h2 className="text-lg font-medium mb-8 text-[#e5e5e5]">Now</h2>
+            {/* Now section with animated elements */}
+            <section className="mb-16 animate-fade-in-up delay-400 relative">
+              <div className="flex items-center gap-4 mb-6">
+                <h2 className="text-lg font-medium text-[#e5e5e5]">Now</h2>
+                <div className="flex-1 h-px bg-gradient-to-r from-[#333] to-transparent"></div>
+                <div className="w-2 h-2 bg-[#6b46c1] rounded-full animate-pulse"></div>
+              </div>
+
               <div className="space-y-4 text-[#e5e5e5] text-base leading-relaxed">
-                <p>
-                  Developing skill through doing, guiltlessly exploring passion and interests, imbuing quality. 
-                  Mindful that <em>everything around me is someone's life work.</em>
+                <p className="hover:text-[#f5f5f5] transition-colors cursor-default">
+                  Building software that makes a difference. Focused on creating intelligent applications that solve real
+                  problems while maintaining clean, intuitive interfaces.
                 </p>
-                <div className="animate-fade-in delay-750" style={{ opacity: 0 }}>
-                  <p>
-                    All I want to do is build websites. Typography, motion design, copywriting, performance—
-                    the web is an endless medium of opportunity and creativity of which I've only scratched 
-                    the surface.
-                  </p>
-                </div>
-                <div className="animate-fade-in delay-850" style={{ opacity: 0 }}>
-                  <p>
-                    Enjoying deep, dark, boring dance music: songs that set the pace in the first ten seconds 
-                    and maintain it for the next ten minutes. Deep is a curation of my favorites. Soothed by the 
-                    inherent energy of drum and bass—Drum has my favorites.
-                  </p>
-                </div>
+                <p className="hover:text-[#f5f5f5] transition-colors cursor-default">
+                  Learning constantly—whether it's new AI techniques, better development practices, or understanding how
+                  technology can transform business processes.
+                </p>
+                <p className="hover:text-[#f5f5f5] transition-colors cursor-default">
+                  Balancing studies with practical work experience, finding the intersection between academic knowledge
+                  and real-world application.
+                </p>
               </div>
             </section>
 
-            {/* Connect Section */}
-            <section className="animate-fade-in-up delay-750" style={{ opacity: 0, transform: 'translateY(30px)' }}>
-              <h2 className="text-lg font-medium mb-8 text-[#e5e5e5]">Connect</h2>
-              <p className="text-[#e5e5e5] text-base">
-                Reach me at <span className="text-[#e5e5e5]">@msc</span> or <span className="text-[#e5e5e5]">ms@msc.dev</span>.
-              </p>
+            {/* Connect section */}
+            <section className="animate-fade-in-up delay-500 relative">
+              <div className="flex items-center gap-4 mb-6">
+                <h2 className="text-lg font-medium text-[#e5e5e5]">Connect</h2>
+                <div className="flex-1 h-px bg-gradient-to-r from-[#333] to-transparent"></div>
+              </div>
+
+              <div className="group">
+                <p className="text-[#e5e5e5] text-base">
+                  Reach me at{" "}
+                  <a href="mailto:moritz.b.schaefer@outlook.de" className="relative inline-block">
+                    <span className="border-b border-[#333] group-hover:border-[#6b46c1] transition-colors">
+                      moritz.b.schaefer@outlook.de
+                    </span>
+                    <span className="absolute -top-1 -right-1 w-1 h-1 bg-[#6b46c1] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                  </a>{" "}
+                  or find me on GitHub.
+                </p>
+              </div>
             </section>
           </div>
+
+          {/* Floating background elements */}
+          <div className="fixed bottom-20 right-20 w-32 h-32 bg-[#6b46c1] rounded-full opacity-5 blur-2xl animate-float pointer-events-none"></div>
+          <div
+            className="fixed top-40 left-20 w-24 h-24 bg-[#f59e0b] rounded-full opacity-5 blur-2xl animate-float pointer-events-none"
+            style={{ animationDelay: "2s" }}
+          ></div>
         </div>
       )}
     </>
