@@ -154,11 +154,6 @@ export default function HomePage() {
       title: "Current",
       items: [
         {
-          title: "AI Platform",
-          description: "Educational technology with personalized learning",
-          href: "#",
-        },
-        {
           title: "Skills & Experience",
           description: "Technical skills and professional background",
           href: "/skills",
