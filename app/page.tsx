@@ -186,13 +186,13 @@ export default function HomePage() {
       title: "Learning",
       items: [
         {
-          title: "Machine Learning",
-          description: "Deep learning and neural networks",
+          title: "PLACEHOLDER",
+          description: "PLACEHOLDER",
           href: "#",
         },
         {
-          title: "System Design",
-          description: "Scalable architecture patterns",
+          title: "PLACEHOLDER",
+          description: "PLACEHOLDER",
           href: "#",
         },
       ],
