@@ -435,16 +435,13 @@ export default function HomePage() {
 
               <div className="space-y-4 text-[#e5e5e5] text-base leading-relaxed">
                 <p className="hover:text-[#f5f5f5] transition-colors cursor-default">
-                  Building software that makes a difference. Focused on creating intelligent applications that solve real
-                  problems while maintaining clean, intuitive interfaces.
+                  PLACEHOLDER
                 </p>
                 <p className="hover:text-[#f5f5f5] transition-colors cursor-default">
-                  Learning constantly—whether it's new AI techniques, better development practices, or understanding how
-                  technology can transform business processes.
+                PLACEHOLDER
                 </p>
                 <p className="hover:text-[#f5f5f5] transition-colors cursor-default">
-                  Balancing studies with practical work experience, finding the intersection between academic knowledge
-                  and real-world application.
+                PLACEHOLDER
                 </p>
               </div>
             </section>
@@ -471,12 +468,7 @@ export default function HomePage() {
             </section>
           </div>
 
-          {/* Floating background elements */}
-          <div className="fixed bottom-20 right-20 w-32 h-32 bg-[#6b46c1] rounded-full opacity-5 blur-2xl animate-float pointer-events-none"></div>
-          <div
-            className="fixed top-40 left-20 w-24 h-24 bg-[#f59e0b] rounded-full opacity-5 blur-2xl animate-float pointer-events-none"
-            style={{ animationDelay: "2s" }}
-          ></div>
+
         </div>
       )}
     </>
