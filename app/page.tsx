@@ -370,7 +370,7 @@ export default function HomePage() {
               <p className="text-[#e5e5e5] mb-4 text-base">
                 I build software that solves problems. Currently working with AI and automation while studying at DHBW.
               </p>
-              <p className="text-[#e5e5e5] text-base">Dual student at PHOENIX International Holdings.</p>
+              <p className="text-[#e5e5e5] text-base">Dual student at PHOENIX International Holdings in Mannheim.</p>
             </header>
 
             {/* Three-column layout with hover effects */}
